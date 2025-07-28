@@ -1,0 +1,82 @@
+# ----------------------
+# OS / Editor / Tooling
+# ----------------------
+.DS_Store
+*.log
+*.lock
+*.swp
+*.pyc
+*.class
+
+# Folders
+.atom/
+.history
+.svn/
+.build/
+.buildlog/
+.migrate_working_dir/
+
+# ----------------------
+# IDEs
+# ----------------------
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code (uncomment if you don't want to commit settings)
+#.vscode/
+
+# ----------------------
+# Flutter / Dart / Pub
+# ----------------------
+.dart_tool/
+.packages
+.pub/
+.pub-cache/
+.flutter-plugins
+.flutter-plugins-dependencies
+.melos_tool/
+build/
+pubspec.lock
+
+# Flutter-generated docs
+**/doc/api/
+
+# iOS-specific build ID
+**/ios/Flutter/.last_build_id
+
+# Symbolication / Obfuscation
+app.*.symbols
+app.*.map.json
+
+# ----------------------
+# Android
+# ----------------------
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
+android/local.properties
+android/gradle.properties
+android/gradle/wrapper/gradle-wrapper.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+
+# ----------------------
+# iOS
+# ----------------------
+ios/Flutter/
+ios/Pods/
+ios/.symlinks/
+ios/Podfile.lock
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/project.xcworkspace/
+ios/Runner.xcodeproj/xcshareddata/
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+ios/Runner.xcworkspace/xcshareddata/
+ios/Runner.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcsettings
