@@ -67,8 +67,19 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
-#    - assets/images/ui/pause.png
-#    - assets/images/ui/resume.png
+    - assets/images/monster_blue/
+    - assets/images/floor.png
+    - assets/images/cloud.png
+    - assets/images/spiky/
+    - assets/images/floaty/
+    - assets/images/grumbluff/
+    - assets/images/ui/
+    - assets/images/monster_maker/bodies/
+    - assets/images/monster_maker/eyes/
+    - assets/images/monster_maker/horns/
+    - assets/images/monster_maker/mouths/
+    - assets/images/pipe/
+    - assets/audio/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
