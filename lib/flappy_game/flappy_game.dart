@@ -27,9 +27,6 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
 
-    topCap = await Sprite.load('pipe/pipe_cap.png');
-    bodySegment = await Sprite.load('pipe/pipe_body.png');
-
     await initializeGame();
   }
 
@@ -49,10 +46,7 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   void spawnPipePair() {
-    add(
-      PipePair(topCap: topCap, bodySegment: bodySegment, screenSize: size)
-        ..position = Vector2(size.x, 0),
-    );
+    add(PipePair(position: Vector2(0, 100), gap: 200, pipeWidth: 32));
   }
 
   void onPlayerCollision() {

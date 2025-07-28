@@ -1,7 +1,6 @@
-import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
-import 'package:flamegame/endless_runner/game_config.dart';
 
 class GrumbluffDrop extends SpriteComponent
     with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
