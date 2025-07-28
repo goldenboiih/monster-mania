@@ -39,6 +39,7 @@ dependencies:
   flutter_svg: ^2.2.0
   flutter_colorpicker: ^1.1.0
   flame_audio: ^2.11.8
+  flutter_riverpod: ^2.6.1
 
 dev_dependencies:
   flutter_test:
@@ -64,18 +65,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/monster_blue/
-    - assets/images/floor.png
-    - assets/images/cloud.png
-    - assets/images/spiky/
-    - assets/images/floaty/
-    - assets/images/grumbluff/
-    - assets/images/ui/
-    - assets/images/monster_maker/bodies/
-    - assets/images/monster_maker/eyes/
-    - assets/images/monster_maker/horns/
-    - assets/images/monster_maker/mouths/
-    - assets/images/pipe/
+    - assets/images/
     - assets/audio/
 #    - assets/images/ui/pause.png
 #    - assets/images/ui/resume.png
