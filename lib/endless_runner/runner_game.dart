@@ -58,8 +58,7 @@ class EndlessRunnerGame extends FlameGame
       ),
     );
 
-    final jumpButton = await Sprite.load('ui/jump_button.png');
-    add(JumpButton(jumpButton));
+    add(JumpButton());
     add(Score());
   }
 
