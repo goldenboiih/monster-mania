@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
@@ -17,8 +16,6 @@ enum GameState { playing, crashing, gameOver }
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   late Player bird;
   late Timer obstacleTimer;
-  late Sprite topCap;
-  late Sprite bodySegment;
 
   final VoidCallback? onExitToMenu;
   late GameState gameState;
