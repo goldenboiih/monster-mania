@@ -38,7 +38,7 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
   void update(double dt) {
     super.update(dt);
     x -= game.speed * dt;
-    if (x + size.x < 0) {
+    if (x + size.x + pipeWidth < 0) {
       removeFromParent();
     }
   }
