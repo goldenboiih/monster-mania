@@ -1,9 +1,9 @@
-import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flame/components.dart';
+import 'package:flamegame/base_game.dart';
 
 class Cloud extends SpriteComponent
-    with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
+    with HasGameReference<BaseGame>, CollisionCallbacks {
   Cloud()
       : super(
     size: Vector2(64, 16), // Or match the sprite's logical size

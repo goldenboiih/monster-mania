@@ -1,8 +1,7 @@
 import 'package:flame/components.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
-import 'package:flamegame/endless_runner/game_config.dart';
+import 'package:flamegame/base_game.dart';
 
-class Floor extends Component with HasGameReference<EndlessRunnerGame> {
+class Floor extends Component with HasGameReference<BaseGame> {
   final List<SpriteComponent> tiles = [];
   final double tileWidth = 256;  // match actual sprite size
   final double tileHeight = 64;

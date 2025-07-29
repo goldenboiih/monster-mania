@@ -8,7 +8,6 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
     required super.position,
     required this.gap,
     required this.pipeWidth,
-    super.priority,
   });
 
   final double gap;
@@ -25,7 +24,7 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
       ),
       Pipe(
         isFlipped: true,
-        position: Vector2(0, -(gap / 2)),
+        position: Vector2(0, (-gap / 2) ),
         pipeWidth: pipeWidth,
       ),
       // HiddenCoin(
@@ -33,5 +32,14 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
       //   size: Vector2(40, game.gameMode.gameConfig.pipeHoleGap * 0.9),
       // ),
     ]);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    x -= game.speed * dt;
+    if (x + size.x < 0) {
+      removeFromParent();
+    }
   }
 }

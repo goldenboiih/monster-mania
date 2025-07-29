@@ -1,7 +1,9 @@
 import 'dart:ui';
-import 'package:flame/components.dart';
+
 import 'package:flame/collisions.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flame/components.dart';
+import 'package:flamegame/world/floor.dart';
+
 import 'flappy_game.dart';
 import 'obstacles/pipe.dart';
 
@@ -20,7 +22,7 @@ class Player extends SpriteComponent
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await Sprite.load('monster_blue/sprite_0.png');
+    sprite = await Sprite.load('flappy/flappy.png');
     add(RectangleHitbox());
   }
 
@@ -57,7 +59,7 @@ class Player extends SpriteComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is Pipe) {
+    if (other is Pipe ||other is Floor) {
       game.onPlayerCollision();
     }
   }

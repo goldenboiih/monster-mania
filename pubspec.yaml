@@ -73,6 +73,7 @@ flutter:
     - assets/images/spiky/
     - assets/images/floaty/
     - assets/images/grumbluff/
+    - assets/images/flappy/
     - assets/images/ui/
     - assets/images/monster_maker/bodies/
     - assets/images/monster_maker/eyes/

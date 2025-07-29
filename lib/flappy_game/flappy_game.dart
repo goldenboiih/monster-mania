@@ -1,20 +1,22 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flamegame/endless_runner/ui/menu_button.dart';
+import 'package:flamegame/base_game.dart';
+import 'package:flamegame/ui/menu_button.dart';
+import 'package:flamegame/world/floor.dart';
 
 import 'obstacles/pipe_pair.dart';
 import 'player.dart';
 
 enum GameState { playing, crashing, gameOver }
 
-class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
+class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   late Player bird;
   late Timer obstacleTimer;
-
   late Sprite topCap;
   late Sprite bodySegment;
 
@@ -26,28 +28,33 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-
     await initializeGame();
   }
 
   Future<void> initializeGame() async {
     gameState = GameState.playing;
-    spawnPlayer();
+    speed = 200;
+
+    // TODO: simplify position
+    bird = Player()..position = Vector2(size.x / 8, size.y / 2);
+    add(bird);
+    add(Floor());
 
     obstacleTimer = Timer(1, repeat: true, onTick: spawnPipePair);
     obstacleTimer.start();
-
     add(MenuButton(onPressed: onExitToMenu));
   }
 
-  void spawnPlayer() {
-    bird = Player()..position = Vector2(size.x / 8, size.y / 2);
-    add(bird);
+  void spawnPipePair() {
+    final double pipeWidth = 48;
+    final verticalCenter = Random().nextDouble() * (size.y - 200) + 100;
+    add(PipePair(
+      position: Vector2(size.x + pipeWidth, verticalCenter),
+      gap: 128,
+      pipeWidth: pipeWidth,
+    ));
   }
 
-  void spawnPipePair() {
-    add(PipePair(position: Vector2(0, 100), gap: 200, pipeWidth: 32));
-  }
 
   void onPlayerCollision() {
     if (gameState == GameState.playing) {
@@ -83,6 +90,9 @@ class FlappyGame extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   void onPlayerOutOfBounds() {
+    if (gameState == GameState.playing) {
+      FlameAudio.play('die.mp3');
+    }
     restart();
   }
 }

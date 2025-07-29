@@ -2,10 +2,10 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
-import '../runner_game.dart';
+import 'package:flamegame/base_game.dart';
 
-class Background extends PositionComponent with HasGameReference<EndlessRunnerGame> {
-  Background() : super(priority: -10); // ⬅️ lower = farther back
+class Background extends PositionComponent with HasGameReference<BaseGame> {
+  Background() : super(priority: -10); // lower = farther back
 
   @override
   Future<void> onLoad() async {

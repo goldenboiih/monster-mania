@@ -4,23 +4,24 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flamegame/endless_runner/world/background.dart';
+import 'package:flamegame/base_game.dart';
 
+import 'package:flamegame/world/floor.dart';
+import 'package:flamegame/world/background.dart';
 import 'obstacles/obstacle.dart';
 import 'obstacles/obstacle_grumbluff.dart';
 import 'player.dart';
-import 'ui/jump_button.dart';
-import 'ui/menu_button.dart';
-import 'ui/score.dart';
-import 'world/cloud.dart';
-import 'world/floor.dart';
+import 'package:flamegame/ui/jump_button.dart';
+import 'package:flamegame/ui/menu_button.dart';
+import 'package:flamegame/ui/score.dart';
+import 'package:flamegame/world/cloud.dart';
 
-class EndlessRunnerGame extends FlameGame
+class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection {
   late Player player;
+
   // late Timer obstacleTimer;
   late Timer cloudTimer;
-  int speed = 300;
   bool isGameOver = false;
   final Random _random = Random();
   final VoidCallback? onExitToMenu;
@@ -33,6 +34,7 @@ class EndlessRunnerGame extends FlameGame
   }
 
   Future<void> initializeGame() async {
+    speed = 300;
     isGameOver = false;
 
     cloudTimer = Timer(
@@ -51,7 +53,6 @@ class EndlessRunnerGame extends FlameGame
 
     add(
       MenuButton(
-
         onPressed: () {
           onExitToMenu?.call(); // Triggers Navigator.pop() via the parent
         },
@@ -102,7 +103,6 @@ class EndlessRunnerGame extends FlameGame
 
   void reset() {
     isGameOver = true;
-    speed = 300;
     // Remove all children (player, floor, background, etc.)
     children.whereType<Component>().forEach((c) => c.removeFromParent());
     // Restart after a short delay
