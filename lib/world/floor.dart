@@ -24,7 +24,7 @@ class Floor extends Component with HasGameReference<BaseGame> {
       );
 
       if (hasHitBox) {
-        tile.add(RectangleHitbox()..debugMode = true);
+        tile.add(RectangleHitbox());
       }
 
       tiles.add(tile);

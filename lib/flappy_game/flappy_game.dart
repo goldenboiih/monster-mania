@@ -11,7 +11,7 @@ import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/floor.dart';
 
 import 'obstacles/pipe_pair.dart';
-import 'player.dart';
+import 'runner.dart';
 
 enum GameState { playing, crashing, gameOver }
 
@@ -52,13 +52,16 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   void spawnPipePair() {
     final double pipeWidth = 48;
     final verticalCenter = Random().nextDouble() * (size.y - 200) + 100;
-    add(PipePair(
-      position: Vector2(size.x + pipeWidth, verticalCenter),
-      gap: 128,
-      pipeWidth: pipeWidth,
-    ));
+    add(
+      PipePair(
+        position: Vector2(size.x + pipeWidth, verticalCenter),
+        gap: 128,
+        pipeWidth: pipeWidth,
+      ),
+    );
   }
 
+  @override
   void restart() {
     children.whereType<Component>().forEach((c) => c.removeFromParent());
 

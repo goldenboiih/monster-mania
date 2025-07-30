@@ -23,7 +23,7 @@ class EndlessRunnerGame extends BaseGame
   @override
   final VoidCallback? onExitToMenu;
 
-  late Player player;
+  late Runner runner;
 
   // late Timer obstacleTimer;
   late Timer cloudTimer;
@@ -53,8 +53,8 @@ class EndlessRunnerGame extends BaseGame
     add(Background());
     add(Floor());
 
-    player = Player();
-    add(player);
+    runner = Runner();
+    add(runner);
 
     add(
       MenuButton(
@@ -69,7 +69,6 @@ class EndlessRunnerGame extends BaseGame
   }
 
   @override
-  bool get debugMode => true;
 
   @override
   void update(double dt) {

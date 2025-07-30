@@ -7,7 +7,7 @@ import 'obstacles/obstacle_floaty.dart';
 import 'obstacles/obstacle_grumbluff.dart';
 import 'obstacles/obstacle_spiky.dart';
 
-class Player extends SpriteAnimationComponent
+class Runner extends SpriteAnimationComponent
     with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
   double verticalSpeed = 0;
   double gravity = 1000;
@@ -16,7 +16,7 @@ class Player extends SpriteAnimationComponent
 
   bool isDead = false;
 
-  Player() : super(size: Vector2(64, 64), position: Vector2(100, 100));
+  Runner() : super(size: Vector2(64, 64), position: Vector2(100, 100));
 
   @override
   Future<void> onLoad() async {

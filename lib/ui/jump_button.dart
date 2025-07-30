@@ -20,6 +20,6 @@ class JumpButton extends SpriteComponent
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
-    game.player.jump();
+    game.runner.jump();
   }
 }
