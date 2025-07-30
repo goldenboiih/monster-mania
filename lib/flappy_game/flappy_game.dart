@@ -11,7 +11,7 @@ import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/floor.dart';
 
 import 'obstacles/pipe_pair.dart';
-import 'runner.dart';
+import 'bird.dart';
 
 enum GameState { playing, crashing, gameOver }
 
@@ -19,7 +19,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
 
-  late Player bird;
+  late Bird bird;
   late Timer obstacleTimer;
 
   late GameState gameState;
@@ -38,7 +38,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     score = 0;
 
     // TODO: simplify position
-    bird = Player()..position = Vector2(size.x / 8, size.y / 2);
+    bird = Bird()..position = Vector2(size.x / 8, size.y / 2);
     add(bird);
     add(Floor(hasHitBox: true));
     add(Background());

@@ -6,6 +6,7 @@ import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
+import 'package:flamegame/ui/crouch_button.dart';
 import 'package:flamegame/ui/jump_button.dart';
 import 'package:flamegame/ui/menu_button.dart';
 import 'package:flamegame/ui/score.dart';
@@ -15,7 +16,7 @@ import 'package:flamegame/world/floor.dart';
 
 import 'obstacles/obstacle.dart';
 import 'obstacles/obstacle_grumbluff.dart';
-import 'player.dart';
+import 'runner.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection {
@@ -65,6 +66,7 @@ class EndlessRunnerGame extends BaseGame
     );
 
     add(JumpButton());
+    add(CrouchButton());
     add(Score());
   }
 

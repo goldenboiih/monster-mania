@@ -7,7 +7,7 @@ import 'package:flamegame/world/floor.dart';
 import 'flappy_game.dart';
 import 'obstacles/pipe.dart';
 
-class Player extends SpriteAnimationComponent
+class Bird extends SpriteAnimationComponent
     with HasGameReference<FlappyGame>, CollisionCallbacks {
   double gravity = 500;
   double jumpSpeed = -200;
@@ -17,7 +17,7 @@ class Player extends SpriteAnimationComponent
   double angleLerpSpeed = 5; // Higher = faster reaction, lower = smoother
   bool isCrashing = false;
 
-  Player() : super(size: Vector2(48, 48));
+  Bird() : super(size: Vector2(48, 48));
 
   @override
   Future<void> onLoad() async {

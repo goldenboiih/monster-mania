@@ -34,13 +34,12 @@ class GameOverOverlay extends StatelessWidget {
                   game.overlays.remove('GameOver');
                   game.restart();
                 },
-                child: const Text('Again'),
+                child: const Text('Restart'),
               ),
               const SizedBox(height: 12),
               TextButton(
                 onPressed: () {
                   game.overlays.remove('GameOver');
-                  game.pauseEngine();
                   game.onExitToMenu?.call();
                 },
                 child: const Text('Exit'),
