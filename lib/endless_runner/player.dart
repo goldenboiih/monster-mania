@@ -64,8 +64,8 @@ class Player extends SpriteAnimationComponent
         y = groundY;
         verticalSpeed = 0;
       }
-    } else {
-      angle += 2 * dt; // optional: rotate while falling
+    } else { // When dying
+      angle += 6 * dt; // rotate while falling
       if (y > game.size.y + height) {
         game.onPlayerOutOfBounds();
         removeFromParent(); // remove when off screen
