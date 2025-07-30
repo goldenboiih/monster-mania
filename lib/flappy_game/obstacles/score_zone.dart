@@ -5,7 +5,6 @@ import 'package:flamegame/flappy_game/player.dart';
 
 class ScoreZone extends PositionComponent
     with HasGameReference<FlappyGame>, CollisionCallbacks {
-  bool hasScored = false;
 
   ScoreZone({required Vector2 size}) {
     this.size = size;
@@ -21,8 +20,7 @@ class ScoreZone extends PositionComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (!hasScored && other is Player) {
-      hasScored = true;
+    if ( other is Player) {
       game.increaseScore();
       removeFromParent(); // remove zone after scoring
     }
