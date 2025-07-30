@@ -5,7 +5,7 @@ import 'package:flame/palette.dart';
 import 'package:flamegame/base_game.dart';
 
 class Background extends PositionComponent with HasGameReference<BaseGame> {
-  Background() : super(priority: -10); // lower = farther back
+  Background() : super(priority: -10);
 
   @override
   Future<void> onLoad() async {

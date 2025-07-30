@@ -6,6 +6,7 @@ import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/ui/menu_button.dart';
+import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/floor.dart';
 
 import 'obstacles/pipe_pair.dart';
@@ -19,6 +20,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   final VoidCallback? onExitToMenu;
   late GameState gameState;
+  late int score;
 
   FlappyGame({this.onExitToMenu});
 
@@ -31,11 +33,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   Future<void> initializeGame() async {
     gameState = GameState.playing;
     speed = 200;
+    score = 0;
 
     // TODO: simplify position
     bird = Player()..position = Vector2(size.x / 8, size.y / 2);
     add(bird);
-    add(Floor());
+    add(Floor(hasHitBox: true));
+    add(Background());
 
     obstacleTimer = Timer(1, repeat: true, onTick: spawnPipePair);
     obstacleTimer.start();
@@ -52,20 +56,12 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     ));
   }
 
-
-  void onPlayerCollision() {
-    if (gameState == GameState.playing) {
-      FlameAudio.play('die.mp3');
-      gameState = GameState.crashing;
-      bird.startCrash();
-    }
-  }
-
   void restart() {
     children.whereType<Component>().forEach((c) => c.removeFromParent());
 
     Future.delayed(const Duration(milliseconds: 0), () async {
       await initializeGame();
+      resumeEngine();
     });
   }
 
@@ -89,7 +85,23 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   void onPlayerOutOfBounds() {
     if (gameState == GameState.playing) {
       FlameAudio.play('die.mp3');
+      overlays.add('GameOver');
+    } else if (gameState == GameState.crashing) {
     }
-    restart();
+    gameState = GameState.gameOver;
+  }
+
+  void onPlayerCollision() {
+    if (gameState == GameState.playing) {
+      FlameAudio.play('die.mp3');
+      gameState = GameState.crashing;
+      overlays.add('GameOver');
+      bird.startCrash();
+    }
+  }
+
+  void increaseScore() {
+    score++;
+    print('Score: $score'); // or update an overlay
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'endless_runner/runner_game.dart';
 import 'flappy_game/flappy_game.dart';
 import 'monster_maker/avatar_maker_screen.dart';
+import 'overlays/game_over_overlay.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -91,11 +92,17 @@ class MainMenuScreen extends StatelessWidget {
         );
         break;
       case Game.flappy:
-        gameWidget = GameWidget(game: FlappyGame(
-          onExitToMenu: () {
-            Navigator.of(context).pop();
+        gameWidget = GameWidget(
+          game: FlappyGame(
+            onExitToMenu: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          overlayBuilderMap: {
+            'GameOver':
+                (context, game) => GameOverOverlay(game: game as FlappyGame),
           },
-        ));
+        );
         break;
     }
 

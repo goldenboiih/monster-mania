@@ -1,14 +1,14 @@
 import 'package:flame/components.dart';
 import 'package:flamegame/flappy_game/flappy_game.dart';
 import 'package:flamegame/flappy_game/obstacles/pipe.dart';
-
+import 'package:flamegame/flappy_game/obstacles/score_zone.dart';
 
 class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
   PipePair({
     required super.position,
     required this.gap,
     required this.pipeWidth,
-  });
+  }) : super(priority: -1);
 
   final double gap;
   final double pipeWidth;
@@ -24,13 +24,10 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
       ),
       Pipe(
         isFlipped: true,
-        position: Vector2(0, (-gap / 2) ),
+        position: Vector2(0, (-gap / 2)),
         pipeWidth: pipeWidth,
       ),
-      // HiddenCoin(
-      //   position: Vector2(30, 0),
-      //   size: Vector2(40, game.gameMode.gameConfig.pipeHoleGap * 0.9),
-      // ),
+      ScoreZone(size: Vector2(10, gap))..position = Vector2(0, 0),
     ]);
   }
 

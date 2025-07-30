@@ -7,7 +7,7 @@ import 'package:flamegame/world/floor.dart';
 import 'flappy_game.dart';
 import 'obstacles/pipe.dart';
 
-class Player extends SpriteComponent
+class Player extends SpriteAnimationComponent
     with HasGameReference<FlappyGame>, CollisionCallbacks {
   double gravity = 500;
   double jumpSpeed = -200;
@@ -22,7 +22,15 @@ class Player extends SpriteComponent
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    sprite = await Sprite.load('flappy/flappy.png');
+    final images = await Future.wait([
+      game.images.load('flappy/flappy_down.png'),
+      game.images.load('flappy/flappy_mid.png'),
+      game.images.load('flappy/flappy_up.png'),
+    ]);
+    animation = SpriteAnimation.spriteList(
+      images.map((img) => Sprite(img)).toList(),
+      stepTime: 0.1,
+    );
     add(RectangleHitbox());
   }
 
@@ -59,7 +67,7 @@ class Player extends SpriteComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is Pipe ||other is Floor) {
+    if (other is Pipe || other.parent is Floor) {
       game.onPlayerCollision();
     }
   }
