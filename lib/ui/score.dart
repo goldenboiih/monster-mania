@@ -1,10 +1,9 @@
 import 'package:flame/components.dart';
+import 'package:flamegame/base_game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
-class Score extends TextComponent {
+class Score extends TextComponent with HasGameReference<BaseGame> {
   double score = 0;
-  final double speed = 60; // units per second (e.g. meters)
 
   Score()
       : super(
@@ -24,7 +23,6 @@ class Score extends TextComponent {
   @override
   void update(double dt) {
     super.update(dt);
-    score += speed * dt;
-    text = '${score.floor()}';
+    text = '${game.score.floor()}';
   }
 }

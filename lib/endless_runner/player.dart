@@ -63,7 +63,7 @@ class Player extends SpriteAnimationComponent
         other is ObstacleFloaty ||
         other is ObstacleGrumbluff ||
         other is GrumbluffDrop) {
-      game.reset();
+      game.onPlayerCollision();
     }
   }
 }

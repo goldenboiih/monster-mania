@@ -6,6 +6,7 @@ import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/ui/menu_button.dart';
+import 'package:flamegame/ui/score.dart';
 import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/floor.dart';
 
@@ -15,12 +16,13 @@ import 'player.dart';
 enum GameState { playing, crashing, gameOver }
 
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
+  @override
+  final VoidCallback? onExitToMenu;
+
   late Player bird;
   late Timer obstacleTimer;
 
-  final VoidCallback? onExitToMenu;
   late GameState gameState;
-  late int score;
 
   FlappyGame({this.onExitToMenu});
 
@@ -44,6 +46,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     obstacleTimer = Timer(1, repeat: true, onTick: spawnPipePair);
     obstacleTimer.start();
     add(MenuButton(onPressed: onExitToMenu));
+    add(Score());
   }
 
   void spawnPipePair() {
@@ -101,7 +104,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   }
 
   void increaseScore() {
+    FlameAudio.play('coin_2.mp3');
     score++;
-    print('Score: $score'); // or update an overlay
   }
 }

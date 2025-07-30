@@ -89,6 +89,10 @@ class MainMenuScreen extends StatelessWidget {
               Navigator.of(context).pop();
             },
           ),
+          overlayBuilderMap: {
+            'GameOver':
+                (context, game) => GameOverOverlay(game: game as EndlessRunnerGame),
+          },
         );
         break;
       case Game.flappy:

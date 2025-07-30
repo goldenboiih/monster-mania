@@ -3,28 +3,31 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/game.dart';
 import 'package:flamegame/base_game.dart';
-
-import 'package:flamegame/world/floor.dart';
-import 'package:flamegame/world/background.dart';
-import 'obstacles/obstacle.dart';
-import 'obstacles/obstacle_grumbluff.dart';
-import 'player.dart';
+import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
 import 'package:flamegame/ui/jump_button.dart';
 import 'package:flamegame/ui/menu_button.dart';
 import 'package:flamegame/ui/score.dart';
+import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/cloud.dart';
+import 'package:flamegame/world/floor.dart';
+
+import 'obstacles/obstacle.dart';
+import 'obstacles/obstacle_grumbluff.dart';
+import 'player.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection {
+
+  @override
+  final VoidCallback? onExitToMenu;
+
   late Player player;
 
   // late Timer obstacleTimer;
   late Timer cloudTimer;
   bool isGameOver = false;
   final Random _random = Random();
-  final VoidCallback? onExitToMenu;
 
   EndlessRunnerGame({this.onExitToMenu});
 
@@ -34,6 +37,7 @@ class EndlessRunnerGame extends BaseGame
   }
 
   Future<void> initializeGame() async {
+    score = 0;
     speed = 300;
     isGameOver = false;
 
@@ -70,6 +74,7 @@ class EndlessRunnerGame extends BaseGame
   void update(double dt) {
     super.update(dt);
     if (!isGameOver) {
+      score++;
       spawnRandomObstacle();
       // obstacleTimer.update(dt);
       cloudTimer.update(dt);
@@ -86,7 +91,7 @@ class EndlessRunnerGame extends BaseGame
 
     switch (type) {
       case 0:
-        obstacle = ObstacleGrumbluff();
+        obstacle = ObstacleSpiky();
         break;
       case 1:
         obstacle = ObstacleGrumbluff();
@@ -101,8 +106,13 @@ class EndlessRunnerGame extends BaseGame
     add(obstacle);
   }
 
-  void reset() {
+  void onPlayerCollision() {
     isGameOver = true;
+    overlays.add('GameOver');
+  }
+
+  @override
+  void restart() {
     // Remove all children (player, floor, background, etc.)
     children.whereType<Component>().forEach((c) => c.removeFromParent());
     // Restart after a short delay

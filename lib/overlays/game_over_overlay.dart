@@ -1,8 +1,9 @@
+import 'package:flamegame/base_game.dart';
 import 'package:flutter/material.dart';
 import 'package:flamegame/flappy_game/flappy_game.dart';
 
 class GameOverOverlay extends StatelessWidget {
-  final FlappyGame game;
+  final BaseGame game;
 
   const GameOverOverlay({super.key, required this.game});
 
