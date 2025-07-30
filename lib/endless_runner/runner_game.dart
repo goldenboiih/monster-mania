@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
 import 'package:flamegame/ui/jump_button.dart';
@@ -107,7 +108,11 @@ class EndlessRunnerGame extends BaseGame
   }
 
   void onPlayerCollision() {
+    FlameAudio.play('die.mp3');
     isGameOver = true;
+  }
+
+  void onPlayerOutOfBounds() {
     overlays.add('GameOver');
   }
 

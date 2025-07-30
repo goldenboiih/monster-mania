@@ -14,6 +14,8 @@ class Player extends SpriteAnimationComponent
   double jumpForce = -400;
   final double groundY = 283;
 
+  bool isDead = false;
+
   Player() : super(size: Vector2(64, 64), position: Vector2(100, 100));
 
   @override
@@ -38,20 +40,36 @@ class Player extends SpriteAnimationComponent
   }
 
   void jump() {
-    if (y >= groundY) {
+    if (y >= groundY && !isDead) {
       verticalSpeed = jumpForce;
     }
+  }
+
+  void die() {
+    if (isDead) return;
+    isDead = true;
+    verticalSpeed = -300; // hurled upward
+    animationTicker?.paused = true;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+
     verticalSpeed += gravity * dt;
     y += verticalSpeed * dt;
 
-    if (y >= groundY) {
-      y = groundY;
-      verticalSpeed = 0;
+    if (!isDead) {
+      if (y >= groundY) {
+        y = groundY;
+        verticalSpeed = 0;
+      }
+    } else {
+      angle += 2 * dt; // optional: rotate while falling
+      if (y > game.size.y + height) {
+        game.onPlayerOutOfBounds();
+        removeFromParent(); // remove when off screen
+      }
     }
   }
 
@@ -59,10 +77,12 @@ class Player extends SpriteAnimationComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    if (other is ObstacleSpiky ||
-        other is ObstacleFloaty ||
-        other is ObstacleGrumbluff ||
-        other is GrumbluffDrop) {
+    if (!isDead &&
+        (other is ObstacleSpiky ||
+            other is ObstacleFloaty ||
+            other is ObstacleGrumbluff ||
+            other is GrumbluffDrop)) {
+      die();
       game.onPlayerCollision();
     }
   }
