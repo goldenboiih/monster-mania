@@ -4,12 +4,7 @@ import 'package:flamegame/endless_runner/runner_game.dart';
 
 class CrouchButton extends SpriteComponent
     with HasGameReference<EndlessRunnerGame>, TapCallbacks {
-
-  CrouchButton()
-      : super(
-      size: Vector2(128, 128),
-      priority: 10,
-  );
+  CrouchButton() : super(size: Vector2(128, 128), priority: 10);
 
   @override
   Future<void> onLoad() async {
@@ -20,6 +15,18 @@ class CrouchButton extends SpriteComponent
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
-    game.runner.jump();
+    game.runner.crouch();
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    super.onTapUp(event);
+    game.runner.stopCrouch();
+  }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    super.onTapCancel(event);
+    game.runner.stopCrouch();
   }
 }

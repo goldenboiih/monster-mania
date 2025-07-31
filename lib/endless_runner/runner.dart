@@ -1,20 +1,26 @@
-import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
+import 'package:flame/components.dart';
+import 'package:flamegame/endless_runner/obstacles/obstacle_fly_guy.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
-import 'package:flamegame/endless_runner/obstacles/grumbluff_drop.dart';
 
-import 'obstacles/obstacle_floaty.dart';
-import 'obstacles/obstacle_grumbluff.dart';
-import 'obstacles/obstacle_spiky.dart';
+import 'obstacles/obstacle.dart';
 
 class Runner extends SpriteAnimationComponent
     with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
+  // Movement and physics
   double verticalSpeed = 0;
-  double gravity = 1000;
-  double jumpForce = -400;
-  final double groundY = 283;
+  final double defaultGravity = 1000;
+  final double fastFallGravity = 4000;
+  final double jumpForce = -400;
+
+  double get groundY => game.size.y - game.floorHeight - (size.y / 2);
+
+  // Dimensions
+  final double normalHeight = 64;
+  final double crouchHeight = 32;
 
   bool isDead = false;
+  bool isCrouching = false;
 
   Runner() : super(size: Vector2(64, 64), position: Vector2(100, 100));
 
@@ -31,21 +37,49 @@ class Runner extends SpriteAnimationComponent
     );
 
     anchor = Anchor.center;
+    gravity = defaultGravity;
+
     add(RectangleHitbox());
   }
 
+  double gravity = 1000;
+
   void jump() {
-    if (y >= groundY && !isDead) {
+    if (!isDead && isOnGround) {
       verticalSpeed = jumpForce;
+    }
+  }
+
+  void crouch() {
+    if (isDead) return;
+
+    if (!isOnGround) {
+      gravity = fastFallGravity; // air fast-fall
+    } else if (!isCrouching) {
+      isCrouching = true;
+      size.y = crouchHeight;
+      position.y += (normalHeight - crouchHeight) / 2;
+    }
+  }
+
+  void stopCrouch() {
+    gravity = defaultGravity;
+
+    if (isOnGround && isCrouching) {
+      position.y -= (normalHeight - crouchHeight) / 2;
+      size.y = normalHeight;
+      isCrouching = false;
     }
   }
 
   void die() {
     if (isDead) return;
     isDead = true;
-    verticalSpeed = -300; // hurled upward
+    verticalSpeed = -300;
     animationTicker?.paused = true;
   }
+
+  bool get isOnGround => y >= groundY;
 
   @override
   void update(double dt) {
@@ -55,15 +89,17 @@ class Runner extends SpriteAnimationComponent
     y += verticalSpeed * dt;
 
     if (!isDead) {
-      if (y >= groundY) {
+      if (isOnGround) {
         y = groundY;
         verticalSpeed = 0;
+        gravity = defaultGravity; // reset gravity after fast-fall
       }
-    } else { // When dying
-      angle += 6 * dt; // rotate while falling
+    } else {
+      angle += 6 * dt;
+
       if (y > game.size.y + height) {
         game.onPlayerOutOfBounds();
-        removeFromParent(); // remove when off screen
+        removeFromParent();
       }
     }
   }
@@ -71,12 +107,9 @@ class Runner extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
+    if (isDead) return;
 
-    if (!isDead &&
-        (other is ObstacleSpiky ||
-            other is ObstacleFloaty ||
-            other is ObstacleGrumbluff ||
-            other is GrumbluffDrop)) {
+    if (other is Obstacle || other is ObstacleFlyGuy) {
       die();
       game.onPlayerCollision();
     }

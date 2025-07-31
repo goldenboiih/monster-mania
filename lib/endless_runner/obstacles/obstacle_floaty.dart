@@ -1,3 +1,4 @@
+import 'package:flamegame/endless_runner/game_config.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
 import 'package:flame/components.dart';
@@ -8,7 +9,7 @@ class ObstacleFloaty extends Obstacle
   ObstacleFloaty()
       : super(
     size: Vector2(64, 64),
-    position: Vector2(800, 291),
+    position: Vector2(800, GameConfig.groundY),
     anchor: Anchor.center,
   );
 

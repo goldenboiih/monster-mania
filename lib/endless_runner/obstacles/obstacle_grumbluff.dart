@@ -55,7 +55,7 @@ class ObstacleGrumbluff extends Obstacle
 
     switch (state) {
       case GrumbluffState.floatingIn:
-        x -= 300 * dt;
+        x -= (game.speed + 100) * dt;
         floatTime += dt;
         y = baseY + sin(floatTime * floatSpeed) * floatAmplitude;
         if (x <= dropTriggerX) {

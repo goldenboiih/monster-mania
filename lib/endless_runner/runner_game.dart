@@ -1,11 +1,10 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/endless_runner/obstacles/obstacle_floaty.dart';
+import 'package:flamegame/endless_runner/obstacles/obstacle_fly_guy.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
 import 'package:flamegame/ui/crouch_button.dart';
 import 'package:flamegame/ui/jump_button.dart';
@@ -23,7 +22,6 @@ import 'runner.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
-
   @override
   final VoidCallback? onExitToMenu;
 
@@ -75,7 +73,6 @@ class EndlessRunnerGame extends BaseGame
   }
 
   @override
-
   @override
   void update(double dt) {
     super.update(dt);
@@ -88,7 +85,8 @@ class EndlessRunnerGame extends BaseGame
   }
 
   void spawnRandomObstacle() {
-    final hasObstacle = children.whereType<Obstacle>().isNotEmpty;
+    // TODO: create convenience function for this
+    final hasObstacle = children.whereType<Obstacle>().isNotEmpty || children.whereType<ObstacleFlyGuy>().isNotEmpty;
     if (hasObstacle) {
       return;
     }
@@ -100,7 +98,7 @@ class EndlessRunnerGame extends BaseGame
         obstacle = ObstacleSpiky();
         break;
       case 1:
-        obstacle = ObstacleGrumbluff();
+        obstacle = ObstacleFlyGuy();
         break;
       case 2:
         obstacle = ObstacleGrumbluff();
@@ -129,5 +127,29 @@ class EndlessRunnerGame extends BaseGame
     Future.delayed(const Duration(milliseconds: 0), () async {
       await initializeGame();
     });
+  }
+
+  @override
+  KeyEventResult onKeyEvent(
+    KeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+        event is KeyDownEvent) {
+      runner.jump();
+      return KeyEventResult.handled;
+    }
+
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (event is KeyDownEvent) {
+        runner.crouch();
+        return KeyEventResult.handled;
+      } else if (event is KeyUpEvent) {
+        runner.stopCrouch();
+        return KeyEventResult.handled;
+      }
+    }
+
+    return KeyEventResult.ignored;
   }
 }

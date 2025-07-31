@@ -72,6 +72,7 @@ flutter:
     - assets/images/cloud.png
     - assets/images/spiky/
     - assets/images/floaty/
+    - assets/images/fly_guy/
     - assets/images/grumbluff/
     - assets/images/flappy/
     - assets/images/ui/
