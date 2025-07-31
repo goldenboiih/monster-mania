@@ -21,11 +21,12 @@ class Bird extends SpriteAnimationComponent
 
   @override
   Future<void> onLoad() async {
+    position = Vector2(game.size.x / 8, game.size.y / 4);
     await super.onLoad();
     final images = await Future.wait([
-      game.images.load('flappy/flappy_down.png'),
-      game.images.load('flappy/flappy_mid.png'),
-      game.images.load('flappy/flappy_up.png'),
+      game.images.load('flappy/flappy_1.png'),
+      game.images.load('flappy/flappy_2.png'),
+      game.images.load('flappy/flappy_3.png'),
     ]);
     animation = SpriteAnimation.spriteList(
       images.map((img) => Sprite(img)).toList(),
