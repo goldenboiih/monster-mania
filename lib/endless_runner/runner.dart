@@ -21,13 +21,8 @@ class Runner extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     final images = await Future.wait([
-      game.images.load('monster_blue/sprite_0.png'),
-      game.images.load('monster_blue/sprite_1.png'),
-      game.images.load('monster_blue/sprite_2.png'),
-      game.images.load('monster_blue/sprite_3.png'),
-      game.images.load('monster_blue/sprite_4.png'),
-      game.images.load('monster_blue/sprite_5.png'),
-      game.images.load('monster_blue/sprite_6.png'),
+      for (int i = 0; i <= 6; i++)
+        game.images.load('monster_blue/sprite_$i.png'),
     ]);
 
     animation = SpriteAnimation.spriteList(
