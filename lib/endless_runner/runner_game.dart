@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/endless_runner/obstacles/obstacle_floaty.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
 import 'package:flamegame/ui/crouch_button.dart';
 import 'package:flamegame/ui/jump_button.dart';
@@ -13,17 +14,20 @@ import 'package:flamegame/ui/score.dart';
 import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/cloud.dart';
 import 'package:flamegame/world/floor.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 import 'obstacles/obstacle.dart';
 import 'obstacles/obstacle_grumbluff.dart';
 import 'runner.dart';
 
 class EndlessRunnerGame extends BaseGame
-    with TapDetector, HasCollisionDetection {
+    with TapDetector, HasCollisionDetection, KeyboardEvents {
 
   @override
   final VoidCallback? onExitToMenu;
 
+  final double floorHeight = 64;
   late Runner runner;
 
   // late Timer obstacleTimer;
@@ -52,7 +56,7 @@ class EndlessRunnerGame extends BaseGame
     )..start();
 
     add(Background());
-    add(Floor());
+    add(Floor(tileHeight: floorHeight));
 
     runner = Runner();
     add(runner);

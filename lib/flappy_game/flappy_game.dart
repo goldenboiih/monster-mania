@@ -19,6 +19,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
 
+  final double floorHeight = 64;
   late Bird bird;
   late Timer obstacleTimer;
 
@@ -40,7 +41,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     // TODO: simplify position
     bird = Bird()..position = Vector2(size.x / 8, size.y / 2);
     add(bird);
-    add(Floor(hasHitBox: true));
+    add(Floor(hasHitBox: true, tileHeight: floorHeight));
     add(Background());
 
     obstacleTimer = Timer(1, repeat: true, onTick: spawnPipePair);

@@ -5,10 +5,10 @@ import 'package:flamegame/base_game.dart';
 class Floor extends Component with HasGameReference<BaseGame> {
   final List<SpriteComponent> tiles = [];
   final double tileWidth = 256; // match actual sprite size
-  final double tileHeight = 64;
+  final double tileHeight;
   final bool hasHitBox;
 
-  Floor({this.hasHitBox = false});
+  Floor({this.hasHitBox = false, required this.tileHeight});
 
   @override
   Future<void> onLoad() async {
