@@ -38,10 +38,9 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     speed = 200;
     score = 0;
 
-    // TODO: simplify position
-    bird = Bird()..position = Vector2(size.x / 8, size.y / 2);
+    bird = Bird();
     add(bird);
-    add(Floor(hasHitBox: true, tileHeight: floorHeight));
+    // add(Floor(hasHitBox: true, tileHeight: floorHeight));
     add(Background());
 
     obstacleTimer = Timer(1, repeat: true, onTick: spawnPipePair);
