@@ -8,10 +8,9 @@ import 'package:flamegame/base_game.dart';
 import 'package:flamegame/ui/menu_button.dart';
 import 'package:flamegame/ui/score.dart';
 import 'package:flamegame/world/background.dart';
-import 'package:flamegame/world/floor.dart';
 
-import 'obstacles/pipe_pair.dart';
 import 'bird.dart';
+import 'obstacles/pipe_pair.dart';
 
 enum GameState { playing, crashing, gameOver }
 
@@ -20,10 +19,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   final VoidCallback? onExitToMenu;
 
   final double floorHeight = 64;
+  final double pipeSpacing = 256;
+  final gravity = 512;
   late Bird bird;
   late Timer obstacleTimer;
 
   late GameState gameState;
+  late double distanceSinceLastPipe;
 
   FlappyGame({this.onExitToMenu});
 
@@ -37,14 +39,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     gameState = GameState.playing;
     speed = 200;
     score = 0;
+    distanceSinceLastPipe = 0;
 
     bird = Bird();
     add(bird);
     // add(Floor(hasHitBox: true, tileHeight: floorHeight));
     add(Background());
 
-    obstacleTimer = Timer(1, repeat: true, onTick: spawnPipePair);
-    obstacleTimer.start();
     add(MenuButton(onPressed: onExitToMenu));
     add(Score());
   }
@@ -64,7 +65,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   void restart() {
     children.whereType<Component>().forEach((c) => c.removeFromParent());
-
     Future.delayed(const Duration(milliseconds: 0), () async {
       await initializeGame();
       resumeEngine();
@@ -74,11 +74,14 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   void update(double dt) {
     super.update(dt);
-    obstacleTimer.update(dt);
-    // if (gameState == GameState.playing) {
-    //   super.update(dt);
-    //   obstacleTimer.update(dt);
-    // }
+
+    final movedDistance = speed * dt;
+    distanceSinceLastPipe += movedDistance;
+
+    if (distanceSinceLastPipe >= pipeSpacing) {
+      spawnPipePair();
+      distanceSinceLastPipe = 0;
+    }
   }
 
   @override
@@ -92,8 +95,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     if (gameState == GameState.playing) {
       FlameAudio.play('die.mp3');
       overlays.add('GameOver');
-    } else if (gameState == GameState.crashing) {
-    }
+    } else if (gameState == GameState.crashing) {}
     gameState = GameState.gameOver;
   }
 
@@ -109,5 +111,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   void increaseScore() {
     FlameAudio.play('coin_2.mp3');
     score++;
+    // speed += 10;
   }
 }

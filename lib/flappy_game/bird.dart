@@ -9,7 +9,6 @@ import 'obstacles/pipe.dart';
 
 class Bird extends SpriteAnimationComponent
     with HasGameReference<FlappyGame>, CollisionCallbacks {
-  double gravity = 500;
   double jumpSpeed = -200;
   double velocityY = 0;
 
@@ -40,7 +39,7 @@ class Bird extends SpriteAnimationComponent
     super.update(dt);
 
     // Gravity
-    velocityY += gravity * dt;
+    velocityY += game.gravity * dt;
     y += velocityY * dt;
 
     if (isCrashing) {
@@ -64,7 +63,6 @@ class Bird extends SpriteAnimationComponent
     }
   }
 
-
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
@@ -77,5 +75,4 @@ class Bird extends SpriteAnimationComponent
     isCrashing = true;
     velocityY = 0; // cancel any upward momentum
   }
-
 }
