@@ -72,6 +72,7 @@ class Bird extends SpriteAnimationComponent
   }
 
   void startCrash() {
+    animationTicker?.paused = true;
     isCrashing = true;
     velocityY = 0; // cancel any upward momentum
   }
