@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
@@ -8,12 +7,11 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/ui/menu_button.dart';
 import 'package:flamegame/ui/score.dart';
-import 'package:flamegame/world/background.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'bird.dart';
 import 'obstacles/pipe_pair.dart';
 
-enum GameState { playing, crashing, gameOver }
 
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
@@ -105,7 +103,10 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     if (gameState == GameState.playing) {
       FlameAudio.play('die.mp3');
       overlays.add('GameOver');
-    } else if (gameState == GameState.crashing) {}
+      bird.startCrash();
+    } else if (gameState == GameState.crashing) {
+
+    }
     gameState = GameState.gameOver;
   }
 

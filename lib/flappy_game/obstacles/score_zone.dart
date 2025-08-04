@@ -2,6 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flamegame/flappy_game/flappy_game.dart';
 import 'package:flamegame/flappy_game/bird.dart';
+import 'package:flamegame/base_game.dart';
 
 class ScoreZone extends PositionComponent
     with HasGameReference<FlappyGame>, CollisionCallbacks {

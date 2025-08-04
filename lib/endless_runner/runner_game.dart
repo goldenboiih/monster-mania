@@ -29,9 +29,9 @@ class EndlessRunnerGame extends BaseGame
   final double floorHeight = 64;
   late Runner runner;
 
-  // late Timer obstacleTimer;
+  // TODO: replace clouds
   late Timer cloudTimer;
-  bool isGameOver = false;
+  late GameState gameState;
   final Random _random = Random();
 
   EndlessRunnerGame({this.onExitToMenu});
@@ -44,7 +44,7 @@ class EndlessRunnerGame extends BaseGame
   Future<void> initializeGame() async {
     score = 0;
     speed = 300;
-    isGameOver = false;
+    gameState = GameState.playing;
 
     cloudTimer = Timer(
       1,
@@ -60,13 +60,6 @@ class EndlessRunnerGame extends BaseGame
     runner = Runner();
     add(runner);
 
-    add(
-      MenuButton(
-        onPressed: () {
-          onExitToMenu?.call(); // Triggers Navigator.pop() via the parent
-        },
-      ),
-    );
 
     final parallax = await loadParallaxComponent(
       [
@@ -81,16 +74,21 @@ class EndlessRunnerGame extends BaseGame
     add(JumpButton());
     add(CrouchButton());
     add(Score());
+    add(
+      MenuButton(
+        onPressed: () {
+          onExitToMenu?.call(); // Triggers Navigator.pop() via the parent
+        },
+      ),
+    );
   }
 
   @override
-  @override
   void update(double dt) {
     super.update(dt);
-    if (!isGameOver) {
+    if (gameState == GameState.playing) {
       score++;
       spawnRandomObstacle();
-      // obstacleTimer.update(dt);
       cloudTimer.update(dt);
     }
   }
@@ -122,11 +120,12 @@ class EndlessRunnerGame extends BaseGame
   }
 
   void onPlayerCollision() {
+    gameState = GameState.crashing;
     FlameAudio.play('die.mp3');
-    isGameOver = true;
   }
 
   void onPlayerOutOfBounds() {
+    gameState = GameState.gameOver;
     overlays.add('GameOver');
   }
 
@@ -140,6 +139,7 @@ class EndlessRunnerGame extends BaseGame
     });
   }
 
+  // Keyboard controls for development
   @override
   KeyEventResult onKeyEvent(
     KeyEvent event,
