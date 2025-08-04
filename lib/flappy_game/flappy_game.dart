@@ -43,8 +43,17 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
     bird = Bird();
     add(bird);
-    // add(Floor(hasHitBox: true, tileHeight: floorHeight));
-    add(Background());
+    final parallax = await loadParallaxComponent(
+      [
+        ParallaxImageData('flappy/background.png'),
+      ],
+      baseVelocity: Vector2(20, 0), // horizontal scroll to the right
+      repeat: ImageRepeat.repeat,
+      velocityMultiplierDelta: Vector2(1.0, 0.0),
+      priority: -1, // ensure it renders in the background
+    );
+    add(parallax);
+
 
     add(MenuButton(onPressed: onExitToMenu));
     add(Score());

@@ -67,6 +67,16 @@ class EndlessRunnerGame extends BaseGame
       ),
     );
 
+    final parallax = await loadParallaxComponent(
+      [
+        ParallaxImageData('flappy/background.png'),
+      ],
+      baseVelocity: Vector2(20, 0), // horizontal scroll to the left
+      repeat: ImageRepeat.repeat,
+      velocityMultiplierDelta: Vector2(1.0, 0.0),
+      priority: -1, // ensure it renders in the background
+    );
+    add(parallax);
     add(JumpButton());
     add(CrouchButton());
     add(Score());
