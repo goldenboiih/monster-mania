@@ -7,7 +7,6 @@ class Score extends TextComponent with HasGameReference<BaseGame> {
 
   Score()
       : super(
-    text: '0',
     position: Vector2(10, 10),
     anchor: Anchor.topLeft,
     priority: 100,
@@ -15,7 +14,7 @@ class Score extends TextComponent with HasGameReference<BaseGame> {
       style: const TextStyle(
         color: Colors.black,
         fontSize: 24,
-        fontFamily: 'Arial',
+        fontFamily: 'Flappy',
       ),
     ),
   );
