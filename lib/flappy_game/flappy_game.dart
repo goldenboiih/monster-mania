@@ -9,6 +9,7 @@ import 'package:flamegame/ui/menu_button.dart';
 import 'package:flamegame/ui/score.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../highscore_manager.dart';
 import 'bird.dart';
 import 'obstacles/pipe_pair.dart';
 
@@ -99,7 +100,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     }
   }
 
-  void onGameOver() {
+  Future<void> onGameOver() async {
     if (gameState == GameState.playing) {
       FlameAudio.play('die.mp3');
       overlays.add('GameOver');
@@ -107,6 +108,8 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     } else if (gameState == GameState.crashing) {
 
     }
+    await HighscoreManager.saveHighscore('flappy', score);
+    highScore = await HighscoreManager.getHighscore('flappy');
     gameState = GameState.gameOver;
   }
 

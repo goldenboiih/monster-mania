@@ -24,9 +24,9 @@ import 'runner.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
+
   @override
   final VoidCallback? onExitToMenu;
-
   final double floorHeight = 64;
   late Runner runner;
 
@@ -127,9 +127,8 @@ class EndlessRunnerGame extends BaseGame
 
   Future<void> onGameOver() async {
     gameState = GameState.gameOver;
-    // await HighscoreManager.saveHighscore('runner', score);
-    // int highscore = await HighscoreManager.getHighscore('runner');
-    // print('Your best score: $highscore');
+    await HighscoreManager.saveHighscore('runner', score);
+    highScore = await HighscoreManager.getHighscore('runner');
     overlays.add('GameOver');
   }
 

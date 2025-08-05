@@ -99,3 +99,6 @@ flutter:
     - family: Flappy
       fonts:
         - asset: assets/fonts/flappy-font/flappy-font.otf
+    - family: PressStart2P
+      fonts:
+        - asset: assets/fonts/press-start-2-play/PressStart2P-Regular.ttf
