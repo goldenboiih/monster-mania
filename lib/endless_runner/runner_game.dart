@@ -17,6 +17,7 @@ import 'package:flamegame/world/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
+import '../highscore_manager.dart';
 import 'obstacles/obstacle.dart';
 import 'obstacles/obstacle_grumbluff.dart';
 import 'runner.dart';
@@ -124,8 +125,11 @@ class EndlessRunnerGame extends BaseGame
     FlameAudio.play('die.mp3');
   }
 
-  void onPlayerOutOfBounds() {
+  Future<void> onGameOver() async {
     gameState = GameState.gameOver;
+    // await HighscoreManager.saveHighscore('runner', score);
+    // int highscore = await HighscoreManager.getHighscore('runner');
+    // print('Your best score: $highscore');
     overlays.add('GameOver');
   }
 

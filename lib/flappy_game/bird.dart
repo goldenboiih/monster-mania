@@ -53,7 +53,7 @@ class Bird extends SpriteAnimationComponent
 
     // End game when out of bounds
     if (y > game.size.y || y < -height) {
-      game.onPlayerOutOfBounds();
+      game.onGameOver();
     }
   }
 

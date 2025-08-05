@@ -12,6 +12,7 @@ class Runner extends SpriteAnimationComponent
   final double defaultGravity = 1000;
   final double fastFallGravity = 4000;
   final double jumpForce = -400;
+  late double gravity;
 
   double get groundY => game.size.y - game.floorHeight - (size.y / 2);
 
@@ -42,25 +43,33 @@ class Runner extends SpriteAnimationComponent
     add(RectangleHitbox());
   }
 
-  double gravity = 1000;
+  bool get isOnGround => y >= groundY;
+
 
   void jump() {
     if (!isDead && isOnGround) {
+      if (isCrouching) {
+        stopCrouch(); // Stand up before jumping
+      }
       verticalSpeed = jumpForce;
     }
   }
+
 
   void crouch() {
     if (isDead) return;
 
     if (!isOnGround) {
-      gravity = fastFallGravity; // air fast-fall
-    } else if (!isCrouching) {
+      // Already in the air — apply fast-fall gravity
+      gravity = fastFallGravity;
+    } else if (!isCrouching && verticalSpeed == 0) {
+      // Only crouch if on ground and not moving vertically
       isCrouching = true;
       size.y = crouchHeight;
       position.y += (normalHeight - crouchHeight) / 2;
     }
   }
+
 
   void stopCrouch() {
     gravity = defaultGravity;
@@ -79,8 +88,6 @@ class Runner extends SpriteAnimationComponent
     animationTicker?.paused = true;
   }
 
-  bool get isOnGround => y >= groundY;
-
   @override
   void update(double dt) {
     super.update(dt);
@@ -98,7 +105,7 @@ class Runner extends SpriteAnimationComponent
       angle += 6 * dt;
 
       if (y > game.size.y + height) {
-        game.onPlayerOutOfBounds();
+        game.onGameOver();
         removeFromParent();
       }
     }

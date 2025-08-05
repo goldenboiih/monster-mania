@@ -99,7 +99,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     }
   }
 
-  void onPlayerOutOfBounds() {
+  void onGameOver() {
     if (gameState == GameState.playing) {
       FlameAudio.play('die.mp3');
       overlays.add('GameOver');
