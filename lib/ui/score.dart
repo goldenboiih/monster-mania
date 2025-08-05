@@ -7,13 +7,13 @@ class Score extends TextComponent with HasGameReference<BaseGame> {
 
   Score()
       : super(
-    position: Vector2(10, 10),
+    position: Vector2(16, 16),
     anchor: Anchor.topLeft,
     priority: 100,
     textRenderer: TextPaint(
       style: const TextStyle(
-        color: Colors.black,
-        fontSize: 24,
+        color: Colors.white,
+        fontSize: 48,
         fontFamily: 'Flappy',
       ),
     ),
