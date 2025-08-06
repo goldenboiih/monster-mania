@@ -5,8 +5,6 @@ import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/ui/menu_button.dart';
-import 'package:flamegame/ui/score.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../highscore_manager.dart';
@@ -32,13 +30,20 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
     await initializeGame();
+    final parallax = await loadParallaxComponent(
+      [ParallaxImageData('flappy/background.png')],
+      baseVelocity: Vector2(20, 0), // horizontal scroll to the right
+      repeat: ImageRepeat.repeat,
+      velocityMultiplierDelta: Vector2(1.0, 0.0),
+      priority: -1, // ensure it renders in the background
+    );
+    add(parallax);
   }
 
   @override
   void onAttach() {
     super.onAttach();
   }
-
 
   Future<void> initializeGame() async {
     gameState = GameState.playing;
@@ -48,17 +53,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
     bird = Bird();
     add(bird);
-    final parallax = await loadParallaxComponent(
-      [ParallaxImageData('flappy/background.png')],
-      baseVelocity: Vector2(20, 0), // horizontal scroll to the right
-      repeat: ImageRepeat.repeat,
-      velocityMultiplierDelta: Vector2(1.0, 0.0),
-      priority: -1, // ensure it renders in the background
-    );
-    add(parallax);
-
-    // add(MenuButton(onPressed: onExitToMenu));
-    add(Score());
   }
 
   void spawnPipePair() {
@@ -75,11 +69,8 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   void restart() {
-    children.whereType<Component>().forEach((c) => c.removeFromParent());
-    Future.delayed(const Duration(milliseconds: 0), () async {
-      await initializeGame();
-      resumeEngine();
-    });
+    children.whereType<PipePair>().forEach((c) => c.removeFromParent());
+    initializeGame();
   }
 
   @override
@@ -123,5 +114,4 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     score++;
     // speed += 10;
   }
-
 }

@@ -3,7 +3,6 @@ import 'package:flamegame/base_game.dart';
 import 'package:flutter/material.dart';
 
 class Score extends TextComponent with HasGameReference<BaseGame> {
-  double score = 0;
 
   Score()
       : super(
