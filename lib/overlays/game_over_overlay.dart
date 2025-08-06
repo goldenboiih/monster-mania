@@ -8,11 +8,11 @@ class GameOverOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isNewHighScore = game.score >= game.highScore;
+    final bool isNewHighScore = game.score > game.highScore;
 
     return Center(
       child: Container(
-        width: 500,
+        width: 384,
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
         decoration: BoxDecoration(
           color: const Color(0xFFFFF3B3),

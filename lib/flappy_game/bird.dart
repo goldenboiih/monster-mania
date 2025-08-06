@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:flamegame/base_game.dart';
 import 'package:flamegame/world/floor.dart';
 
 import 'flappy_game.dart';
@@ -14,7 +16,6 @@ class Bird extends SpriteAnimationComponent
 
   double targetAngle = 0;
   double angleLerpSpeed = 5; // Higher = faster reaction, lower = smoother
-  bool isCrashing = false;
 
   Bird() : super(size: Vector2(48, 48));
 
@@ -42,7 +43,7 @@ class Bird extends SpriteAnimationComponent
     velocityY += game.gravity * dt;
     y += velocityY * dt;
 
-    if (isCrashing) {
+    if (game.gameState == GameState.crashing) {
       // Smoothly rotate to downward facing
       angle = lerpDouble(angle, 1.57, dt * 10)!;
     } else {
@@ -53,12 +54,14 @@ class Bird extends SpriteAnimationComponent
 
     // End game when out of bounds
     if (y > game.size.y || y < -height) {
+      FlameAudio.play('die.mp3');
+      removeFromParent();
       game.onGameOver();
     }
   }
 
   void jump() {
-    if (!isCrashing) {
+    if (game.gameState == GameState.playing) {
       velocityY = jumpSpeed;
     }
   }
@@ -67,13 +70,14 @@ class Bird extends SpriteAnimationComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is Pipe || other.parent is Floor) {
+      // FlameAudio.play('die.mp3');
       game.onPlayerCollision();
     }
   }
 
   void startCrash() {
     animationTicker?.paused = true;
-    isCrashing = true;
+    game.gameState = GameState.crashing;
     velocityY = 0; // cancel any upward momentum
   }
 }

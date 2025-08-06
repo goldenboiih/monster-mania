@@ -13,7 +13,6 @@ import '../highscore_manager.dart';
 import 'bird.dart';
 import 'obstacles/pipe_pair.dart';
 
-
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
@@ -33,6 +32,19 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
     await initializeGame();
+    FlameAudio.bgm.play('energy_theme_jextor_bg.wav', volume: 0.5);
+  }
+
+  @override
+  void onAttach() {
+    super.onAttach();
+    FlameAudio.bgm.play('energy_theme_jextor_bg.wav', volume: 0.5);
+  }
+
+  @override
+  void onDetach() {
+    super.onDetach();
+    FlameAudio.bgm.stop();
   }
 
   Future<void> initializeGame() async {
@@ -44,16 +56,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     bird = Bird();
     add(bird);
     final parallax = await loadParallaxComponent(
-      [
-        ParallaxImageData('flappy/background.png'),
-      ],
+      [ParallaxImageData('flappy/background.png')],
       baseVelocity: Vector2(20, 0), // horizontal scroll to the right
       repeat: ImageRepeat.repeat,
       velocityMultiplierDelta: Vector2(1.0, 0.0),
       priority: -1, // ensure it renders in the background
     );
     add(parallax);
-
 
     add(MenuButton(onPressed: onExitToMenu));
     add(Score());
@@ -95,27 +104,20 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   void onTap() {
-    if (gameState == GameState.playing) {
-      bird.jump();
-    }
+    bird.jump();
   }
 
   Future<void> onGameOver() async {
-    if (gameState == GameState.playing) {
-      FlameAudio.play('die.mp3');
-      overlays.add('GameOver');
-      bird.startCrash();
-    } else if (gameState == GameState.crashing) {
-
-    }
     await HighscoreManager.saveHighscore('flappy', score);
     highScore = await HighscoreManager.getHighscore('flappy');
+    bird.startCrash();
+    overlays.add('GameOver');
+
     gameState = GameState.gameOver;
   }
 
   void onPlayerCollision() {
     if (gameState == GameState.playing) {
-      FlameAudio.play('die.mp3');
       gameState = GameState.crashing;
       overlays.add('GameOver');
       bird.startCrash();
@@ -127,4 +129,5 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     score++;
     // speed += 10;
   }
+
 }

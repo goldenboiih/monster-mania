@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HighscoreManager {
@@ -10,8 +12,10 @@ class HighscoreManager {
     final current = prefs.getInt(key) ?? 0;
 
     if (score > current) {
+      log('set highscore to $score');
       await prefs.setInt(key, score);
     }
+    // await prefs.setInt(key, 0);
   }
 
   // Get highscore
