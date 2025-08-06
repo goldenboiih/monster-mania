@@ -2,6 +2,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'audio_manager.dart';
 import 'endless_runner/runner_game.dart';
 import 'flappy_game/flappy_game.dart';
 import 'monster_maker/avatar_maker_screen.dart';
@@ -11,7 +12,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
   await Flame.device.setLandscape();
-
   runApp(const MonsterMania());
 }
 

@@ -32,20 +32,13 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   Future<void> onLoad() async {
     await super.onLoad();
     await initializeGame();
-    FlameAudio.bgm.play('energy_theme_jextor_bg.wav', volume: 0.5);
   }
 
   @override
   void onAttach() {
     super.onAttach();
-    FlameAudio.bgm.play('energy_theme_jextor_bg.wav', volume: 0.5);
   }
 
-  @override
-  void onDetach() {
-    super.onDetach();
-    FlameAudio.bgm.stop();
-  }
 
   Future<void> initializeGame() async {
     gameState = GameState.playing;
