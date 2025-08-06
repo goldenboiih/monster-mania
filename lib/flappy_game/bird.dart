@@ -68,7 +68,7 @@ class Bird extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is Pipe || other.parent is Floor) {
+    if (other is Pipe) {
       game.onPlayerCollision();
     }
   }
