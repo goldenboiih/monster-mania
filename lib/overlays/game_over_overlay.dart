@@ -8,7 +8,7 @@ class GameOverOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isNewHighScore = game.score == game.highScore;
+    final bool isNewHighScore = game.highScore > game.previousHighScore;
 
     return Center(
       child: Container(

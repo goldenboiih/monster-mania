@@ -127,6 +127,7 @@ class EndlessRunnerGame extends BaseGame
 
   Future<void> onGameOver() async {
     gameState = GameState.gameOver;
+    previousHighScore = await HighscoreManager.getHighscore('runner');
     await HighscoreManager.saveHighscore('runner', score);
     highScore = await HighscoreManager.getHighscore('runner');
     overlays.add('GameOver');

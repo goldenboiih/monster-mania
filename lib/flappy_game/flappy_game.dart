@@ -109,6 +109,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   Future<void> onGameOver() async {
     FlameAudio.play('die.mp3');
+    previousHighScore = await HighscoreManager.getHighscore('flappy');
     await HighscoreManager.saveHighscore('flappy', score);
     highScore = await HighscoreManager.getHighscore('flappy');
     bird.startCrash();

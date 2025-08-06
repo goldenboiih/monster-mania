@@ -5,6 +5,7 @@ import 'package:flame/game.dart';
 enum GameState { playing, crashing, gameOver }
 
 class BaseGame extends FlameGame {
+  late int previousHighScore;
   late int highScore;
   late int speed;
   late int score;
