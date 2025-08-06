@@ -8,7 +8,7 @@ class GameOverOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isNewHighScore = game.score > game.highScore;
+    final bool isNewHighScore = game.score == game.highScore;
 
     return Center(
       child: Container(
@@ -39,24 +39,24 @@ class GameOverOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Medal
-                // Column(
-                //   children: [
-                //     const Text(
-                //       'MEDAL',
-                //       style: TextStyle(
-                //         fontFamily: 'PressStart2P',
-                //         fontSize: 8,
-                //         color: Colors.orangeAccent,
-                //       ),
-                //     ),
-                //     const SizedBox(height: 8),
-                //     Image.asset(
-                //       'assets/images/medal_silver.png',
-                //       width: 48,
-                //       height: 48,
-                //     ),
-                //   ],
-                // ),
+                Column(
+                  children: [
+                    const Text(
+                      'MEDAL',
+                      style: TextStyle(
+                        fontFamily: 'PressStart2P',
+                        fontSize: 8,
+                        color: Colors.orangeAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Image.asset(
+                    //   'assets/images/medal_silver.png',
+                    //   width: 48,
+                    //   height: 48,
+                    // ),
+                  ],
+                ),
 
                 // Score and Highscore
                 Column(

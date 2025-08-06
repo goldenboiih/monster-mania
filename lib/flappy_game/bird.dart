@@ -54,7 +54,6 @@ class Bird extends SpriteAnimationComponent
 
     // End game when out of bounds
     if (y > game.size.y || y < -height) {
-      FlameAudio.play('die.mp3');
       removeFromParent();
       game.onGameOver();
     }
@@ -70,14 +69,12 @@ class Bird extends SpriteAnimationComponent
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     if (other is Pipe || other.parent is Floor) {
-      // FlameAudio.play('die.mp3');
       game.onPlayerCollision();
     }
   }
 
   void startCrash() {
     animationTicker?.paused = true;
-    game.gameState = GameState.crashing;
     velocityY = 0; // cancel any upward momentum
   }
 }

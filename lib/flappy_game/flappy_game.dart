@@ -64,7 +64,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     );
     add(parallax);
 
-    add(MenuButton(onPressed: onExitToMenu));
+    // add(MenuButton(onPressed: onExitToMenu));
     add(Score());
   }
 
@@ -108,19 +108,19 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   }
 
   Future<void> onGameOver() async {
+    FlameAudio.play('die.mp3');
     await HighscoreManager.saveHighscore('flappy', score);
     highScore = await HighscoreManager.getHighscore('flappy');
     bird.startCrash();
     overlays.add('GameOver');
-
     gameState = GameState.gameOver;
   }
 
   void onPlayerCollision() {
     if (gameState == GameState.playing) {
-      gameState = GameState.crashing;
-      overlays.add('GameOver');
+      FlameAudio.play('die.mp3');
       bird.startCrash();
+      gameState = GameState.crashing;
     }
   }
 
