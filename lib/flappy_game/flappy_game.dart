@@ -69,7 +69,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   }
 
   void spawnPipePair() {
-    final double pipeWidth = 48;
+    final double pipeWidth = 64;
     final verticalCenter = Random().nextDouble() * (size.y - 200) + 100;
     add(
       PipePair(
