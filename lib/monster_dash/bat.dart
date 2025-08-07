@@ -4,21 +4,23 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flamegame/base_game.dart';
 
-import 'flappy_game.dart';
+import 'monster_dash.dart';
 
-class Bird extends SpriteAnimationComponent
-    with HasGameReference<FlappyGame>, CollisionCallbacks {
-  double jumpSpeed = -200;
+class Bat extends SpriteAnimationComponent
+    with HasGameReference<MonsterDash>, CollisionCallbacks {
+  double jumpSpeed = -300;
   double velocityY = 0;
+  double velocityX = 150;
 
-  double targetAngle = 0;
-  double angleLerpSpeed = 5; // Higher = faster reaction, lower = smoother
+  double angleLerpSpeed = 5;
 
-  Bird() : super(size: Vector2(48, 48));
+  Bat() : super(size: Vector2(48, 48));
+
+  bool _facingRight = true;
 
   @override
   Future<void> onLoad() async {
-    position = Vector2(game.size.x / 8, game.size.y / 4);
+    position = Vector2(game.size.x / 4, game.size.y / 4);
     await super.onLoad();
     final images = await Future.wait([
       game.images.load('flappy/flappy_1.png'),
@@ -36,20 +38,35 @@ class Bird extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
 
-    // Gravity
+    if (game.gameState != GameState.playing &&
+        game.gameState != GameState.crashing)
+      return;
+
+    // Y movement (gravity)
     velocityY += game.gravity * dt;
     y += velocityY * dt;
 
-    if (game.gameState == GameState.crashing) {
-      // Smoothly rotate to downward facing
-      angle = lerpDouble(angle, 1.57, dt * 10)!;
-    } else {
-      // Tilt based on speed
-      final target = (velocityY / 400).clamp(-0.5, 0.5);
-      angle = lerpDouble(angle, target, dt * 5)!;
+    // X movement (side-to-side bounce)
+    x += velocityX * dt;
+
+    // Bounce horizontally and flip sprite
+    if (x <= 0 + width) {
+      velocityX = velocityX.abs(); // go right
+      _flipIfNeeded(true);
+    } else if (x + width >= game.size.x) {
+      velocityX = -velocityX.abs(); // go left
+      _flipIfNeeded(false);
     }
 
-    // End game when out of bounds
+    // Rotate sprite based on vertical speed
+    if (game.gameState == GameState.crashing) {
+      angle = lerpDouble(angle, 1.57, dt * 10)!;
+    } else {
+      final target = (velocityY / 400).clamp(-0.5, 0.5);
+      angle = lerpDouble(angle, target, dt * angleLerpSpeed)!;
+    }
+
+    // Out of bounds check (bottom/top)
     if (y > game.size.y || y < -height) {
       removeFromParent();
       game.onGameOver();
@@ -62,14 +79,23 @@ class Bird extends SpriteAnimationComponent
     }
   }
 
+  void startCrash() {
+    animationTicker?.paused = true;
+    velocityY = 0;
+    velocityX = 0;
+  }
+
+  void _flipIfNeeded(bool facingRight) {
+    if (_facingRight != facingRight) {
+      game.increaseScore();
+      flipHorizontallyAroundCenter();
+      _facingRight = facingRight;
+    }
+  }
+
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
     game.onPlayerCollision(other);
-  }
-
-  void startCrash() {
-    animationTicker?.paused = true;
-    velocityY = 0; // cancel any upward momentum
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flamegame/monster_dash/monster_dash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'audio_manager.dart';
+
 import 'endless_runner/runner_game.dart';
 import 'flappy_game/flappy_game.dart';
 import 'monster_maker/avatar_maker_screen.dart';
@@ -26,7 +27,7 @@ class MonsterMania extends StatelessWidget {
   }
 }
 
-enum Game { endlessRunner, flappy }
+enum Game { endlessRunner, flappy, dash }
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
@@ -59,6 +60,11 @@ class MainMenuScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              onPressed: () => _openGame(context, Game.dash),
+              child: const Text('Monster Dash'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const AvatarMakerScreen()),
@@ -74,14 +80,14 @@ class MainMenuScreen extends StatelessWidget {
 
   static void _openGame(BuildContext context, Game gameType) async {
     Widget gameWidget;
-    // Lock to landscape when game starts
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
 
     switch (gameType) {
       case Game.endlessRunner:
+      // Lock to landscape when game starts
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
         gameWidget = GameWidget(
           game: EndlessRunnerGame(
             onExitToMenu: () {
@@ -95,6 +101,11 @@ class MainMenuScreen extends StatelessWidget {
         );
         break;
       case Game.flappy:
+      // Lock to landscape when game starts
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ]);
         gameWidget = GameWidget(
           game: FlappyGame(
             onExitToMenu: () {
@@ -107,6 +118,23 @@ class MainMenuScreen extends StatelessWidget {
           },
         );
         break;
+      case Game.dash:
+      // Lock to landscape when game starts
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+        gameWidget = GameWidget(
+          game: MonsterDash(
+            onExitToMenu: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          overlayBuilderMap: {
+            'GameOver':
+                (context, game) => GameOverOverlay(game: game as MonsterDash),
+          },
+        );
     }
 
     Navigator.of(

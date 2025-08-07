@@ -5,6 +5,7 @@ import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/flappy_game/obstacles/pipe.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../highscore_manager.dart';
@@ -88,7 +89,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   void onTap() {
-    bird.jump();
+    bird.flap();
   }
 
   Future<void> onGameOver() async {
@@ -101,8 +102,8 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     gameState = GameState.gameOver;
   }
 
-  void onPlayerCollision() {
-    if (gameState == GameState.playing) {
+  void onPlayerCollision(PositionComponent other) {
+    if (gameState == GameState.playing && other is Pipe) {
       FlameAudio.play('die.mp3');
       bird.startCrash();
       gameState = GameState.crashing;
