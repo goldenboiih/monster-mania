@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
@@ -9,7 +7,7 @@ import 'package:flamegame/endless_runner/obstacles/obstacle_fly_guy.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
 import 'package:flamegame/ui/crouch_button.dart';
 import 'package:flamegame/ui/jump_button.dart';
-import 'package:flamegame/ui/menu_button.dart';
+import 'package:flamegame/ui/music_toggle.dart';
 import 'package:flamegame/ui/score.dart';
 import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/cloud.dart';
@@ -19,6 +17,7 @@ import 'package:flutter/services.dart';
 
 import '../highscore_manager.dart';
 import 'obstacles/obstacle.dart';
+import 'obstacles/obstacle_floaty.dart';
 import 'obstacles/obstacle_grumbluff.dart';
 import 'runner.dart';
 
@@ -33,12 +32,12 @@ class EndlessRunnerGame extends BaseGame
   // TODO: replace clouds
   late Timer cloudTimer;
   late GameState gameState;
-  final Random _random = Random();
 
   EndlessRunnerGame({this.onExitToMenu});
 
   @override
   Future<void> onLoad() async {
+    add(MusicToggle());
     await initializeGame();
   }
 
@@ -75,13 +74,6 @@ class EndlessRunnerGame extends BaseGame
     add(JumpButton());
     add(CrouchButton());
     add(Score());
-    add(
-      MenuButton(
-        onPressed: () {
-          onExitToMenu?.call(); // Triggers Navigator.pop() via the parent
-        },
-      ),
-    );
   }
 
   @override
@@ -100,7 +92,8 @@ class EndlessRunnerGame extends BaseGame
     if (hasObstacle) {
       return;
     }
-    final int type = _random.nextInt(3); // 3 types
+    // final int type = Random().nextInt(4); // 4 types
+    final int type = 2;
     late final Component obstacle;
 
     switch (type) {
@@ -112,9 +105,9 @@ class EndlessRunnerGame extends BaseGame
         break;
       case 2:
         obstacle = ObstacleGrumbluff();
-
-        // obstacles = ObstacleFloaty()
-        //   ..position.y = 100;
+        break;
+      case 3:
+        obstacle = ObstacleFloaty();
         break;
     }
     add(obstacle);

@@ -11,8 +11,8 @@ class GrumbluffDrop extends Obstacle
   GrumbluffDrop(Vector2 spawnPosition)
       : super(
     size: Vector2(24, 24),
-    position: spawnPosition,
     anchor: Anchor.center,
+    position: spawnPosition
   );
 
   @override
