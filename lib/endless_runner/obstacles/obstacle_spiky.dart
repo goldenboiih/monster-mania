@@ -13,7 +13,7 @@ class ObstacleSpiky extends Obstacle
 
   @override
   Future<void> onLoad() async {
-    position = Vector2(game.size.x + width, game.size.y / 2);
+    position = Vector2(game.size.x + width, game.size.y - game.floorHeight - (size.y / 2));
     sprite = await Sprite.load('spiky/spiky_monster_32x32.png');
     add(RectangleHitbox.relative(Vector2.all(.7), parentSize: size));
   }

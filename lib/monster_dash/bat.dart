@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/util/utils.dart';
 
 import 'monster_dash.dart';
 
@@ -16,6 +17,7 @@ class Bat extends SpriteAnimationComponent
 
   Bat() : super(size: Vector2(48, 48));
   late bool _facingRight;
+
   bool get isFacingRight => _facingRight;
 
   @override
@@ -24,14 +26,13 @@ class Bat extends SpriteAnimationComponent
 
     position = Vector2(game.size.x / 4, game.size.y / 4);
     await super.onLoad();
-    final images = await Future.wait([
-      game.images.load('flappy/flappy_1.png'),
-      game.images.load('flappy/flappy_2.png'),
-      game.images.load('flappy/flappy_3.png'),
-    ]);
-    animation = SpriteAnimation.spriteList(
-      images.map((img) => Sprite(img)).toList(),
-      stepTime: 0.1,
+    animation = await loadSpriteAnimation(
+      images: [
+        'flappy/flappy_1.png',
+        'flappy/_flappy_2.png',
+        'flappy/flappy_3.png',
+      ],
+      stepTime: 1,
     );
     add(RectangleHitbox());
   }
@@ -101,7 +102,6 @@ class Bat extends SpriteAnimationComponent
       }
     }
   }
-
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {

@@ -1,7 +1,9 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flamegame/base_game.dart';
 import 'package:flamegame/endless_runner/obstacles/obstacle_fly_guy.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flamegame/main.dart';
 
 import 'obstacles/obstacle.dart';
 
@@ -20,7 +22,6 @@ class Runner extends SpriteAnimationComponent
   final double normalHeight = 64;
   final double crouchHeight = 32;
 
-  bool isDead = false;
   bool isCrouching = false;
 
   Runner() : super(size: Vector2(64, 64), position: Vector2(100, 100));
@@ -47,7 +48,7 @@ class Runner extends SpriteAnimationComponent
 
 
   void jump() {
-    if (!isDead && isOnGround) {
+    if (game.gameState == GameState.playing && isOnGround) {
       if (isCrouching) {
         stopCrouch(); // Stand up before jumping
       }
@@ -57,7 +58,7 @@ class Runner extends SpriteAnimationComponent
 
 
   void crouch() {
-    if (isDead) return;
+    if (game.gameState != GameState.playing) return;
 
     if (!isOnGround) {
       // Already in the air — apply fast-fall gravity
@@ -82,8 +83,6 @@ class Runner extends SpriteAnimationComponent
   }
 
   void die() {
-    if (isDead) return;
-    isDead = true;
     verticalSpeed = -300;
     animationTicker?.paused = true;
   }
@@ -95,7 +94,7 @@ class Runner extends SpriteAnimationComponent
     verticalSpeed += gravity * dt;
     y += verticalSpeed * dt;
 
-    if (!isDead) {
+    if (game.gameState != GameState.crashing) {
       if (isOnGround) {
         y = groundY;
         verticalSpeed = 0;
@@ -114,11 +113,7 @@ class Runner extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (isDead) return;
+    game.onPlayerCollision(other);
 
-    if (other is Obstacle || other is ObstacleFlyGuy) {
-      die();
-      game.onPlayerCollision();
-    }
   }
 }

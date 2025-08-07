@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
@@ -88,12 +90,12 @@ class EndlessRunnerGame extends BaseGame
 
   void spawnRandomObstacle() {
     // TODO: create convenience function for this
-    final hasObstacle = children.whereType<Obstacle>().isNotEmpty || children.whereType<ObstacleFlyGuy>().isNotEmpty;
+    final hasObstacle = children.whereType<Obstacle>().isNotEmpty || children.whereType<ObstacleFlyGuy>().isNotEmpty || children.whereType<ObstacleGrumbluff>().isNotEmpty;
     if (hasObstacle) {
       return;
     }
-    // final int type = Random().nextInt(4); // 4 types
-    final int type = 2;
+    final int type = Random().nextInt(4); // 4 types
+    // final int type = 2;
     late final Component obstacle;
 
     switch (type) {
@@ -113,8 +115,12 @@ class EndlessRunnerGame extends BaseGame
     add(obstacle);
   }
 
-  void onPlayerCollision() {
+  void onPlayerCollision(PositionComponent other) {
+    if (gameState == GameState.crashing) return;
     gameState = GameState.crashing;
+    if (other is Obstacle || other is ObstacleFlyGuy || other is ObstacleGrumbluff) {
+      runner.die();
+    }
     FlameAudio.play('die.mp3');
   }
 
