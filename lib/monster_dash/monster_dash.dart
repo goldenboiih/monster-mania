@@ -12,32 +12,32 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
 
-  final double floorHeight = 64;
-  final double pipeSpacing = 256;
   final gravity = 700;
   late Bat bat;
-  late Timer obstacleTimer;
 
   late GameState gameState;
+
+  late BrickWall leftWall;
+  late BrickWall rightWall;
 
   MonsterDash({this.onExitToMenu});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    scoreText.position = Vector2(size.x / 2, 16);
+    speed = 300;
     await initializeGame();
   }
 
   Future<void> initializeGame() async {
     gameState = GameState.playing;
-    speed = 300;
     score = 0;
     bat = Bat();
     add(bat);
-    final wall = BrickWall(left: true);
-    final wall2 = BrickWall(left: false);
-    add(wall);
-    add(wall2);
+    leftWall = BrickWall(left: true);
+    rightWall = BrickWall(left: false);
+    add(rightWall);
   }
 
 
@@ -74,6 +74,28 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
       gameState = GameState.crashing;
     }
   }
+  void spawnLeftWall() {
+    leftWall = BrickWall(left: true);
+    add(leftWall);
+  }
+
+  void spawnRightWall() {
+    rightWall = BrickWall(left: false);
+    add(rightWall);
+  }
+
+  void onBatBounceLeftToRight() {
+    leftWall.slideOut();
+    rightWall = BrickWall(left: false);
+    add(rightWall);
+  }
+
+  void onBatBounceRightToLeft() {
+    rightWall.slideOut();
+    leftWall = BrickWall(left: true);
+    add(leftWall);
+  }
+
 
   void increaseScore() {
     FlameAudio.play('coin_2.mp3');

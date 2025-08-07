@@ -15,11 +15,13 @@ class Bat extends SpriteAnimationComponent
   double angleLerpSpeed = 5;
 
   Bat() : super(size: Vector2(48, 48));
-
-  bool _facingRight = true;
+  late bool _facingRight;
+  bool get isFacingRight => _facingRight;
 
   @override
   Future<void> onLoad() async {
+    _facingRight = true;
+
     position = Vector2(game.size.x / 4, game.size.y / 4);
     await super.onLoad();
     final images = await Future.wait([
@@ -90,8 +92,16 @@ class Bat extends SpriteAnimationComponent
       game.increaseScore();
       flipHorizontallyAroundCenter();
       _facingRight = facingRight;
+
+      // Tell the game to manage walls
+      if (_facingRight) {
+        game.onBatBounceLeftToRight();
+      } else {
+        game.onBatBounceRightToLeft();
+      }
     }
   }
+
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
