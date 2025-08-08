@@ -90,12 +90,12 @@ class EndlessRunnerGame extends BaseGame
 
   void spawnRandomObstacle() {
     // TODO: create convenience function for this
-    final hasObstacle = children.whereType<Obstacle>().isNotEmpty || children.whereType<ObstacleFlyGuy>().isNotEmpty || children.whereType<ObstacleGrumbluff>().isNotEmpty;
+    final hasObstacle = children.whereType<Obstacle>().isNotEmpty || children.whereType<ObstacleFlyGuy>().isNotEmpty || children.whereType<ObstacleGrumbluff>().isNotEmpty || children.whereType<ObstacleSpiky>().isNotEmpty;
     if (hasObstacle) {
       return;
     }
-    final int type = Random().nextInt(4); // 4 types
-    // final int type = 2;
+    // final int type = Random().nextInt(4); // 4 types
+    final int type = 0;
     late final Component obstacle;
 
     switch (type) {
