@@ -16,7 +16,7 @@ class Runner extends SpriteAnimationComponent
   final double jumpForce = -400;
   late double gravity;
 
-  double get groundY => game.size.y - game.floorHeight - (size.y / 2);
+  double get groundY => game.size.y - game.floorHeight - (size.y / 2) + 2;
 
   // Dimensions
   final double normalHeight = 64;
