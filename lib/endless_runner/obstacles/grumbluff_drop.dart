@@ -6,7 +6,7 @@ import 'package:flamegame/endless_runner/runner_game.dart';
 class GrumbluffDrop extends Obstacle
     with HasGameReference<EndlessRunnerGame> {
   bool hasLanded = false;
-  final double groundY = 303;
+  late double groundY;
 
   GrumbluffDrop(Vector2 spawnPosition)
       : super(
@@ -17,6 +17,8 @@ class GrumbluffDrop extends Obstacle
 
   @override
   Future<void> onLoad() async {
+    groundY = game.size.y - game.floorHeight - (size.y / 2);
+
     sprite = await Sprite.load('grumbluff/drop_8x8.png');
     add(RectangleHitbox.relative(Vector2.all(1.0), parentSize: size));
   }
