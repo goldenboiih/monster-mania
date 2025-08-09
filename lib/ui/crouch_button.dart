@@ -8,9 +8,13 @@ class CrouchButton extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
+    anchor = Anchor.center;
     sprite = await Sprite.load('ui/jump_button.png');
-    position = Vector2(0, game.size.y - size.y);
+    position = Vector2(size.x / 2, game.size.y - size.y / 2); // same spot visually
+
+    scale = Vector2(1, -1); // mirror horizontally
   }
+
 
   @override
   void onTapDown(TapDownEvent event) {
