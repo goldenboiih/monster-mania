@@ -1,39 +1,57 @@
 import 'dart:math';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/endless_runner/obstacles/obstacle_fly_guy.dart';
-import 'package:flamegame/endless_runner/obstacles/obstacle_spiky.dart';
-import 'package:flamegame/ui/crouch_button.dart';
+import 'package:flamegame/world/background.dart';
+import 'package:flamegame/world/floor.dart';
 import 'package:flamegame/ui/jump_button.dart';
+import 'package:flamegame/ui/crouch_button.dart';
 import 'package:flamegame/ui/music_toggle.dart';
 import 'package:flamegame/ui/score.dart';
-import 'package:flamegame/world/background.dart';
-import 'package:flamegame/world/cloud.dart';
-import 'package:flamegame/world/floor.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-
 import '../highscore_manager.dart';
-import 'obstacles/obstacle.dart';
-import 'obstacles/obstacle_floaty.dart';
-import 'obstacles/obstacle_grumbluff.dart';
+
 import 'runner.dart';
+import 'obstacles/obstacle.dart';
+import 'obstacles/obstacle_spiky.dart';
+import 'obstacles/obstacle_fly_guy.dart';
+import 'obstacles/obstacle_grumbluff.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
   @override
   final VoidCallback? onExitToMenu;
+
+  EndlessRunnerGame({this.onExitToMenu});
+
   final double floorHeight = 64;
   late Runner runner;
 
-  late Timer obstacleTimer;
   late GameState gameState;
+  // Difficulty ramp
+  late double spawnInterval;    // seconds between spawns (starts here)
+  final double minSpawnInterval = 0.6;
+  final double spawnStep = 0.1;    // subtract this when ramping
 
-  EndlessRunnerGame({this.onExitToMenu});
+  final int initialSpeed = 400;
+  final int speedStep = 40;        // add this each ramp
+  final int maxSpeed = 800;
+
+  double difficultyClock = 0.0;    // seconds since last ramp
+  final double rampEvery = 8.0;    // ramp every N seconds
+
+  // Distance-based scoring
+  // Define how many pixels are "one meter" for your UI
+  static const double pixelsPerMeter = 100.0;
+  double distanceMeters = 0.0;
+
+  // Spawning
+  late Timer obstacleTimer;
+  final _random = Random();
 
   @override
   Future<void> onLoad() async {
@@ -42,16 +60,16 @@ class EndlessRunnerGame extends BaseGame
   }
 
   Future<void> initializeGame() async {
-    score = 0;
-    speed = 300;
     gameState = GameState.playing;
 
-    // spawn every 2 seconds
-    obstacleTimer = Timer(
-      1.5,
-      onTick: spawnRandomObstacle,
-      repeat: true,
-    )..start();
+    distanceMeters = 0.0;
+    score = 0;
+
+    speed = initialSpeed;
+    spawnInterval = 1;
+    difficultyClock = 0.0;
+
+    _createObstacleTimer(spawnInterval);
 
     add(Background());
     add(Floor(tileHeight: floorHeight));
@@ -60,35 +78,61 @@ class EndlessRunnerGame extends BaseGame
     add(runner);
 
     final parallax = await loadParallaxComponent(
-      [
-        ParallaxImageData('flappy/background.png'),
-      ],
+      [ParallaxImageData('flappy/background.png')],
       baseVelocity: Vector2(20, 0),
       repeat: ImageRepeat.repeat,
       velocityMultiplierDelta: Vector2(1.0, 0.0),
       priority: -1,
     );
     add(parallax);
+
     add(JumpButton());
     add(CrouchButton());
-    add(Score());
+  }
+
+  void _createObstacleTimer(double interval) {
+    obstacleTimer = Timer(interval, onTick: spawnRandomObstacle, repeat: true)
+      ..start();
+  }
+
+  void _restartObstacleTimer(double interval) {
+    obstacleTimer.stop();
+    obstacleTimer = Timer(interval, onTick: spawnRandomObstacle, repeat: true)
+      ..start();
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    if (gameState == GameState.playing) {
-      score++;
-      spawnRandomObstacle();
-      cloudTimer.update(dt);
+    if (gameState != GameState.playing) return;
+
+    // Distance-based score: convert pixels to meters
+    // distanceMeters += (pixels traveled this frame) / pixelsPerMeter
+    distanceMeters += (speed * dt) / pixelsPerMeter;
+    score = distanceMeters.toInt(); // keep Score() component happy
+
+    // Spawning & difficulty timing
+    obstacleTimer.update(dt);
+
+    difficultyClock += dt;
+    if (difficultyClock >= rampEvery) {
+      difficultyClock = 0.0;
+
+      // 1) Increase world speed
+      speed = (speed + speedStep).clamp(0, maxSpeed);
+
+      // 2) Decrease spawn interval
+      final next = (spawnInterval - spawnStep).clamp(minSpawnInterval, 10.0);
+      if (next != spawnInterval) {
+        spawnInterval = next;
+        _restartObstacleTimer(spawnInterval);
+      }
     }
   }
 
   void spawnRandomObstacle() {
-    // Grumbluff alive? -> skip spawning anything
-    if (children.whereType<ObstacleGrumbluff>().isNotEmpty) {
-      return;
-    }
+    // Ensure Grumbluff spawns alone
+    if (children.whereType<ObstacleGrumbluff>().isNotEmpty) return;
 
     // Pick obstacle type
     final int type = Random().nextInt(4); // 4 types
@@ -115,8 +159,8 @@ class EndlessRunnerGame extends BaseGame
 
   void onPlayerCollision(PositionComponent other) {
     if (gameState == GameState.crashing) return;
-    gameState = GameState.crashing;
-    if (other is Obstacle || other is ObstacleFlyGuy || other is ObstacleGrumbluff) {
+    if (other is Obstacle || other is ObstacleFlyGuy || other is ObstacleGrumbluff || other is ObstacleSpiky) {
+      gameState = GameState.crashing;
       runner.die();
     }
     FlameAudio.play('die.mp3');
@@ -140,15 +184,8 @@ class EndlessRunnerGame extends BaseGame
 
   // Keyboard controls for development
   @override
-  KeyEventResult onKeyEvent(
-    KeyEvent event,
-    Set<LogicalKeyboardKey> keysPressed,
-  ) {
-      KeyEvent event,
-      Set<LogicalKeyboardKey> keysPressed,
-      ) {
-    if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
-        event is KeyDownEvent) {
+  KeyEventResult onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp && event is KeyDownEvent) {
       runner.jump();
       return KeyEventResult.handled;
     }
