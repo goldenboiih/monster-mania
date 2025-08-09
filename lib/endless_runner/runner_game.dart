@@ -25,14 +25,12 @@ import 'runner.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
-
   @override
   final VoidCallback? onExitToMenu;
   final double floorHeight = 64;
   late Runner runner;
 
-  // TODO: replace clouds
-  late Timer cloudTimer;
+  late Timer obstacleTimer;
   late GameState gameState;
 
   EndlessRunnerGame({this.onExitToMenu});
@@ -48,11 +46,10 @@ class EndlessRunnerGame extends BaseGame
     speed = 300;
     gameState = GameState.playing;
 
-    cloudTimer = Timer(
-      1,
-      onTick: () {
-        add(Cloud());
-      },
+    // spawn every 2 seconds
+    obstacleTimer = Timer(
+      1.5,
+      onTick: spawnRandomObstacle,
       repeat: true,
     )..start();
 
@@ -62,15 +59,14 @@ class EndlessRunnerGame extends BaseGame
     runner = Runner();
     add(runner);
 
-
     final parallax = await loadParallaxComponent(
       [
         ParallaxImageData('flappy/background.png'),
       ],
-      baseVelocity: Vector2(20, 0), // horizontal scroll to the left
+      baseVelocity: Vector2(20, 0),
       repeat: ImageRepeat.repeat,
       velocityMultiplierDelta: Vector2(1.0, 0.0),
-      priority: -1, // ensure it renders in the background
+      priority: -1,
     );
     add(parallax);
     add(JumpButton());
@@ -89,13 +85,13 @@ class EndlessRunnerGame extends BaseGame
   }
 
   void spawnRandomObstacle() {
-    // TODO: create convenience function for this
-    final hasObstacle = children.whereType<Obstacle>().isNotEmpty || children.whereType<ObstacleFlyGuy>().isNotEmpty || children.whereType<ObstacleGrumbluff>().isNotEmpty || children.whereType<ObstacleSpiky>().isNotEmpty;
-    if (hasObstacle) {
+    // Grumbluff alive? -> skip spawning anything
+    if (children.whereType<ObstacleGrumbluff>().isNotEmpty) {
       return;
     }
-    // final int type = Random().nextInt(4); // 4 types
-    final int type = 0;
+
+    // Pick obstacle type
+    final int type = Random().nextInt(4); // 4 types
     late final Component obstacle;
 
     switch (type) {
@@ -106,11 +102,13 @@ class EndlessRunnerGame extends BaseGame
         obstacle = ObstacleFlyGuy();
         break;
       case 2:
-        obstacle = ObstacleGrumbluff();
+        obstacle = ObstacleGrumbluff(); // always alone
         break;
       case 3:
         obstacle = ObstacleFloaty();
         break;
+      default:
+        return;
     }
     add(obstacle);
   }
@@ -134,9 +132,7 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   void restart() {
-    // Remove all children (player, floor, background, etc.)
     children.whereType<Component>().forEach((c) => c.removeFromParent());
-    // Restart after a short delay
     Future.delayed(const Duration(milliseconds: 0), () async {
       await initializeGame();
     });
@@ -148,6 +144,9 @@ class EndlessRunnerGame extends BaseGame
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
+      KeyEvent event,
+      Set<LogicalKeyboardKey> keysPressed,
+      ) {
     if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
         event is KeyDownEvent) {
       runner.jump();
