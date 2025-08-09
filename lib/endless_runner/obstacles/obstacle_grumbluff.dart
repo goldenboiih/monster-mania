@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
-
 import 'grumbluff_drop.dart';
 
 enum GrumbluffState { floatingIn, dropping, escapingRight, descending, chargingLeft }
@@ -20,9 +18,10 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
   double floatTime = 0.0;
 
   int totalDrops = 0;
-  int dropsRemaining = 0;
+  late int dropsRemaining;
 
   late Timer dropIdleTimer;
+  late bool skipDescend; // 40% chance to skip the descend path
 
   ObstacleGrumbluff()
       : super(
@@ -35,22 +34,27 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
     position = Vector2(game.size.x + width, game.size.y / 5);
     baseY = y;
 
+    // Decide once per instance
+    skipDescend = Random().nextDouble() < 0.4;
+
     // Load animations and static sprites
+    final spriteIdle = await Sprite.load('grumbluff/grumbluff_idle.png');
+    final sprite0 = await Sprite.load('grumbluff/grumbluff_throw_0.png');
+    final sprite1 = await Sprite.load('grumbluff/grumbluff_throw_1.png');
+    final sprite2 = await Sprite.load('grumbluff/grumbluff_throw_2.png');
 
-    final sprite_idle = await Sprite.load('grumbluff/grumbluff_idle.png');
-    final sprite_0 = await Sprite.load('grumbluff/grumbluff_throw_0.png');
-    final sprite_1 = await Sprite.load('grumbluff/grumbluff_throw_1.png');
-    final sprite_2 = await Sprite.load('grumbluff/grumbluff_throw_2.png');
-    final dropAnimation = SpriteAnimation.spriteList([sprite_0, sprite_1, sprite_2], stepTime: 0.15);
+    final dropAnimation = SpriteAnimation.spriteList(
+      [sprite0, sprite1, sprite2],
+      stepTime: 0.05,
+      loop: false,
+    );
 
-
-    // Assign animations per state
     animations = {
-      GrumbluffState.floatingIn: SpriteAnimation.spriteList([sprite_0], stepTime: double.infinity),
+      GrumbluffState.floatingIn: SpriteAnimation.spriteList([sprite0], stepTime: double.infinity),
       GrumbluffState.dropping: dropAnimation,
-      GrumbluffState.escapingRight: SpriteAnimation.spriteList([sprite_idle], stepTime: double.infinity),
-      GrumbluffState.descending: SpriteAnimation.spriteList([sprite_2], stepTime: double.infinity),
-      GrumbluffState.chargingLeft: SpriteAnimation.spriteList([sprite_1], stepTime: double.infinity),
+      GrumbluffState.escapingRight: SpriteAnimation.spriteList([spriteIdle], stepTime: double.infinity),
+      GrumbluffState.descending: SpriteAnimation.spriteList([sprite2], stepTime: double.infinity),
+      GrumbluffState.chargingLeft: SpriteAnimation.spriteList([sprite1], stepTime: double.infinity),
     };
 
     current = GrumbluffState.floatingIn;
@@ -106,34 +110,44 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
         }
         break;
       case null:
-        // TODO: Handle this case.
         throw UnimplementedError();
     }
   }
 
   void startDropping() {
+    // Always play the dropping animation from start
     current = GrumbluffState.dropping;
-    performDrop();
+
+    // Calculate how long the drop animation takes
+    final double animDuration =
+        (animations![GrumbluffState.dropping]?.frames.length ?? 0) *
+            (0.05);
+    animationTicker?.reset();
+    // After animation finishes, spawn the drop
+    dropIdleTimer = Timer(animDuration, onTick: () {
+      game.add(GrumbluffDrop(position.clone() + Vector2(0, size.y / 2)));
+      dropsRemaining--;
+
+      if (dropsRemaining > 0) {
+        // Wait before starting next throw animation
+        dropIdleTimer = Timer(
+          Random().nextDouble() * 0.5 + 0.5,
+          onTick: startDropping,
+          repeat: false,
+        )..start();
+      } else {
+        // Finished all drops → either skip descend or escape right
+        dropIdleTimer = Timer(
+          Random().nextDouble() * 0.5 + 0.5,
+          onTick: () {
+            current = skipDescend
+                ? GrumbluffState.chargingLeft
+                : GrumbluffState.escapingRight;
+          },
+          repeat: false,
+        )..start();
+      }
+    }, repeat: false)..start();
   }
 
-  void performDrop() {
-    game.add(GrumbluffDrop(position.clone() + Vector2(0, size.y / 2)));
-    dropsRemaining--;
-
-    if (dropsRemaining > 0) {
-      dropIdleTimer = Timer(
-        Random().nextDouble() * 1 + 0.5,
-        onTick: performDrop,
-        repeat: false,
-      )..start();
-    } else {
-      dropIdleTimer = Timer(
-        Random().nextDouble() * 1 + 0.5,
-        onTick: () {
-          current = GrumbluffState.escapingRight;
-        },
-        repeat: false,
-      )..start();
-    }
-  }
 }
