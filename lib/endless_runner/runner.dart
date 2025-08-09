@@ -1,11 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/endless_runner/obstacles/obstacle_fly_guy.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
-import 'package:flamegame/main.dart';
-
-import 'obstacles/obstacle.dart';
 
 class Runner extends SpriteAnimationComponent
     with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
