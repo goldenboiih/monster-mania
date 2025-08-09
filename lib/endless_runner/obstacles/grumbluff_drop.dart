@@ -30,7 +30,7 @@ class GrumbluffDrop extends Obstacle
     x -= game.speed * dt;
 
     if (!hasLanded) {
-      y += 250 * dt;
+      y += game.speed * dt;
     }
 
     if (y >= groundY) {
