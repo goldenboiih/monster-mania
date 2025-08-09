@@ -29,7 +29,7 @@ class Bat extends SpriteAnimationComponent
     animation = await loadSpriteAnimation(
       images: [
         'flappy/flappy_1.png',
-        'flappy/_flappy_2.png',
+        'flappy/flappy_2.png',
         'flappy/flappy_3.png',
       ],
       stepTime: 1,
