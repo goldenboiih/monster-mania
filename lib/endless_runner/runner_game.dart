@@ -159,11 +159,11 @@ class EndlessRunnerGame extends BaseGame
 
   void onPlayerCollision(PositionComponent other) {
     if (gameState == GameState.crashing) return;
-    if (other is Obstacle || other is ObstacleFlyGuy || other is ObstacleGrumbluff || other is ObstacleSpiky) {
+    if ( other is ObstacleTag) {
       gameState = GameState.crashing;
       runner.die();
+      FlameAudio.play('die.mp3');
     }
-    FlameAudio.play('die.mp3');
   }
 
   Future<void> onGameOver() async {
