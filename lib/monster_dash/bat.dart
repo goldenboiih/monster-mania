@@ -9,11 +9,12 @@ import 'monster_dash.dart';
 
 class Bat extends SpriteAnimationComponent
     with HasGameReference<MonsterDash>, CollisionCallbacks {
-  double jumpSpeed = -300;
+  double flapSpeed = -256;
   double velocityY = 0;
   double velocityX = 150;
 
   double angleLerpSpeed = 5;
+  final double climbSpeed = 260;
 
   Bat() : super(size: Vector2(48, 48));
   late bool _facingRight;
@@ -32,7 +33,7 @@ class Bat extends SpriteAnimationComponent
         'flappy/flappy_2.png',
         'flappy/flappy_3.png',
       ],
-      stepTime: 1,
+      stepTime: 0.1,
     );
     add(RectangleHitbox());
   }
@@ -41,27 +42,34 @@ class Bat extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
 
-    if (game.gameState != GameState.playing &&
-        game.gameState != GameState.crashing)
-      return;
+    if (game.gameState != GameState.playing && game.gameState != GameState.crashing) return;
 
-    // Y movement (gravity)
-    velocityY += game.gravity * dt;
+    // --- Vertical motion ---
+    if (game.gameState == GameState.playing) {
+      if (game.isPressing) {
+        // Smoothly steer vertical speed toward upward target
+        velocityY = lerpDouble(velocityY, -climbSpeed, dt * 10)!;
+      } else {
+        // Gravity only when not pressing
+        velocityY += game.gravity * dt;
+      }
+    } else {
+      // Crashing: pure gravity
+      velocityY += game.gravity * dt;
+    }
     y += velocityY * dt;
 
-    // X movement (side-to-side bounce)
+    // --- Horizontal motion (unchanged) ---
     x += velocityX * dt;
-
-    // Bounce horizontally and flip sprite
     if (x <= 0 + width) {
-      velocityX = velocityX.abs(); // go right
+      velocityX = velocityX.abs();
       _flipIfNeeded(true);
     } else if (x + width >= game.size.x) {
-      velocityX = -velocityX.abs(); // go left
+      velocityX = -velocityX.abs();
       _flipIfNeeded(false);
     }
 
-    // Rotate sprite based on vertical speed
+    // --- Tilt ---
     if (game.gameState == GameState.crashing) {
       angle = lerpDouble(angle, 1.57, dt * 10)!;
     } else {
@@ -69,7 +77,7 @@ class Bat extends SpriteAnimationComponent
       angle = lerpDouble(angle, target, dt * angleLerpSpeed)!;
     }
 
-    // Out of bounds check (bottom/top)
+    // --- Bounds check ---
     if (y > game.size.y || y < -height) {
       removeFromParent();
       game.onGameOver();
@@ -78,7 +86,7 @@ class Bat extends SpriteAnimationComponent
 
   void flap() {
     if (game.gameState == GameState.playing) {
-      velocityY = jumpSpeed;
+      velocityY = flapSpeed;
     }
   }
 

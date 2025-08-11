@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
@@ -11,6 +12,8 @@ import 'obstacles/brick_wall.dart';
 class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
+
+  bool isPressing = false;
 
   final gravity = 700;
   late Bat bat;
@@ -52,13 +55,25 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
     super.update(dt);
   }
 
+
   @override
-  void onTap() {
+  void onTapDown(TapDownInfo info) {
     bat.flap();
+    isPressing = true;
+  }
+
+  @override
+  void onTapUp(TapUpInfo info) {
+    isPressing = false;
+  }
+
+  @override
+  void onTapCancel() {
+    isPressing = false;
   }
 
   Future<void> onGameOver() async {
-    FlameAudio.play('die.mp3');
+    FlameAudio.play('fall_2.mp3');
     previousHighScore = await HighscoreManager.getHighscore('dash');
     await HighscoreManager.saveHighscore('dash', score);
     highScore = await HighscoreManager.getHighscore('dash');
