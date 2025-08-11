@@ -7,9 +7,9 @@ class Runner extends SpriteAnimationComponent
     with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
   // Movement and physics
   double verticalSpeed = 0;
-  final double defaultGravity = 1000;
-  final double fastFallGravity = 4000;
-  final double jumpForce = -400;
+  final double defaultGravity = 4000;
+  final double fastFallGravity = 8000;
+  final double jumpForce = -950;
   late double gravity;
 
   double get groundY => game.size.y - game.floorHeight - (size.y / 2) + 2;
