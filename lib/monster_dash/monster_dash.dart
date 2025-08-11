@@ -113,7 +113,7 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
 
 
   void increaseScore() {
-    FlameAudio.play('coin_2.mp3');
+    FlameAudio.play('click.mp3');
     score++;
   }
 }
