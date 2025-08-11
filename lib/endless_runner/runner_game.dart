@@ -55,7 +55,7 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   Future<void> onLoad() async {
-    add(MusicToggle());
+    super.onLoad();
     await initializeGame();
   }
 
@@ -176,7 +176,10 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   void restart() {
-    children.whereType<Component>().forEach((c) => c.removeFromParent());
+    // iterate components and filter by the tag
+    for (final c in children.whereType<ObstacleTag>()) {
+      (c as Component).removeFromParent();
+    }
     Future.delayed(const Duration(milliseconds: 0), () async {
       await initializeGame();
     });

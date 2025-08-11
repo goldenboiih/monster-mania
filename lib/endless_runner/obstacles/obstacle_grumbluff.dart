@@ -3,11 +3,12 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
 import 'grumbluff_drop.dart';
+import 'obstacle_tag.dart';
 
 enum GrumbluffState { floatingIn, dropping, escapingRight, descending, chargingLeft }
 
 class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
-    with HasGameReference<EndlessRunnerGame> {
+    with HasGameReference<EndlessRunnerGame>, ObstacleTag{
   final double floatAmplitude = 6.0;
   final double floatSpeed = 4.0;
   final double floorY = 311;

@@ -1,10 +1,11 @@
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
+import 'package:flamegame/endless_runner/obstacles/obstacle_tag.dart';
 import 'package:flamegame/endless_runner/runner_game.dart';
 
 
 class ObstacleSpiky extends SpriteAnimationComponent
-    with HasGameReference<EndlessRunnerGame> {
+    with HasGameReference<EndlessRunnerGame>, ObstacleTag {
   ObstacleSpiky()
     : super(
         size: Vector2(64, 64), // Or match the sprite's logical size
