@@ -11,7 +11,7 @@ class Bat extends SpriteAnimationComponent
     with HasGameReference<MonsterDash>, CollisionCallbacks {
   double flapSpeed = -256;
   double velocityY = 0;
-  double velocityX = 150;
+  late double velocityX;
 
   double angleLerpSpeed = 5;
   final double climbSpeed = 260;
@@ -24,7 +24,7 @@ class Bat extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     _facingRight = true;
-
+    velocityX = game.speed;
     position = Vector2(game.size.x / 4, game.size.y / 4);
     await super.onLoad();
     animation = await loadSpriteAnimation(
