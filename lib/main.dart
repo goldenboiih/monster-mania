@@ -12,7 +12,13 @@ import 'overlays/game_over_overlay.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
-  await Flame.device.setLandscape();
+
+  // Default menu orientation: portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(const MonsterMania());
 }
 
@@ -29,8 +35,23 @@ class MonsterMania extends StatelessWidget {
 
 enum Game { endlessRunner, flappy, dash }
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
+
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Ensure menu is always portrait
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +99,11 @@ class MainMenuScreen extends StatelessWidget {
     );
   }
 
-  static void _openGame(BuildContext context, Game gameType) async {
+  static Future<void> _openGame(BuildContext context, Game gameType) async {
     Widget gameWidget;
 
     switch (gameType) {
       case Game.endlessRunner:
-      // Lock to landscape when game starts
         await SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
@@ -100,37 +120,34 @@ class MainMenuScreen extends StatelessWidget {
           },
         );
         break;
+
       case Game.flappy:
         await SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
         ]);
-
         final flappy = FlappyGame(
           onExitToMenu: () {
             Navigator.of(context).pop();
           },
         );
-
         gameWidget = GameWidget(
           game: flappy,
           overlayBuilderMap: {
             'GameOver': (context, game) =>
                 GameOverOverlay(game: game as FlappyGame),
-
-            // --- GET READY OVERLAY ---
             'GetReady': (context, game) {
               final g = game as FlappyGame;
               return GestureDetector(
-                behavior: HitTestBehavior.opaque, // catch the very first tap
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  g.startFromIntro();          // start the run
+                  g.startFromIntro();
                   g.overlays.remove('GetReady');
                 },
                 child: Center(
                   child: Image.asset(
                     'assets/images/flappy/start_overlay.png',
-                    filterQuality: FilterQuality.none, // crisp pixels
+                    filterQuality: FilterQuality.none,
                     fit: BoxFit.contain,
                     width: 480,
                   ),
@@ -138,11 +155,11 @@ class MainMenuScreen extends StatelessWidget {
               );
             },
           },
-          initialActiveOverlays: const ['GetReady'], // show once at start
+          initialActiveOverlays: const ['GetReady'],
         );
         break;
+
       case Game.dash:
-      // Lock to landscape when game starts
         await SystemChrome.setPreferredOrientations([
           DeviceOrientation.portraitUp,
           DeviceOrientation.portraitDown,
@@ -158,10 +175,18 @@ class MainMenuScreen extends StatelessWidget {
                 (context, game) => GameOverOverlay(game: game as MonsterDash),
           },
         );
+        break;
     }
 
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => Scaffold(body: gameWidget)));
+    // Await route to finish before restoring portrait
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => Scaffold(body: gameWidget)),
+    );
+
+    // Restore menu orientation
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 }
