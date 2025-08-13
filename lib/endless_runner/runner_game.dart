@@ -1,25 +1,23 @@
 import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/highscore_manager.dart';
+import 'package:flamegame/ui/crouch_button.dart';
+import 'package:flamegame/ui/jump_button.dart';
 import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/floor.dart';
-import 'package:flamegame/ui/jump_button.dart';
-import 'package:flamegame/ui/crouch_button.dart';
-import 'package:flamegame/ui/music_toggle.dart';
-import 'package:flamegame/ui/score.dart';
-import '../highscore_manager.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
-import 'runner.dart';
-import 'obstacles/obstacle.dart';
-import 'obstacles/obstacle_spiky.dart';
 import 'obstacles/obstacle_fly_guy.dart';
 import 'obstacles/obstacle_grumbluff.dart';
+import 'obstacles/obstacle_spiky.dart';
+import 'obstacles/obstacle_tag.dart';
+import 'runner.dart';
 
 class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
@@ -37,9 +35,9 @@ class EndlessRunnerGame extends BaseGame
   final double minSpawnInterval = 0.6;
   final double spawnStep = 0.1;    // subtract this when ramping
 
-  final int initialSpeed = 400;
-  final int speedStep = 40;        // add this each ramp
-  final int maxSpeed = 800;
+  final double initialSpeed = 400;
+  final double speedStep = 40;        // add this each ramp
+  final double maxSpeed = 800;
 
   double difficultyClock = 0.0;    // seconds since last ramp
   final double rampEvery = 8.0;    // ramp every N seconds
@@ -55,6 +53,12 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   Future<void> onLoad() async {
+    // TODO: Fix this hack.
+    // Wait until we have a non-zero width that's larger than height (landscape)
+    while (size.x <= 0 || size.x < size.y) {
+      await Future.delayed(const Duration(milliseconds: 16)); // ~1 frame
+    }
+
     super.onLoad();
     await initializeGame();
   }
@@ -134,22 +138,22 @@ class EndlessRunnerGame extends BaseGame
     // Ensure Grumbluff spawns alone
     if (children.whereType<ObstacleGrumbluff>().isNotEmpty) return;
 
-    // Pick obstacle type
-    final int type = Random().nextInt(4); // 4 types
+    final int type = _random.nextInt(4);
+    // final int type = 1;
     late final Component obstacle;
 
     switch (type) {
       case 0:
-        obstacle = ObstacleSpiky();
+        obstacle = ObstacleGrumbluff();
         break;
       case 1:
         obstacle = ObstacleFlyGuy();
         break;
       case 2:
-        obstacle = ObstacleGrumbluff(); // always alone
+        obstacle = ObstacleSpiky();
         break;
       case 3:
-        obstacle = ObstacleFloaty();
+        obstacle = ObstacleFlyGuy();
         break;
       default:
         return;
