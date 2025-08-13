@@ -27,9 +27,7 @@ class MonsterMania extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MainMenuScreen(),
-    );
+    return MaterialApp(home: const MainMenuScreen());
   }
 }
 
@@ -134,8 +132,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         gameWidget = GameWidget(
           game: flappy,
           overlayBuilderMap: {
-            'GameOver': (context, game) =>
-                GameOverOverlay(game: game as FlappyGame),
+            'GameOver':
+                (context, game) => GameOverOverlay(game: game as FlappyGame),
             'GetReady': (context, game) {
               final g = game as FlappyGame;
               return GestureDetector(
@@ -180,7 +178,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
     // Await route to finish before restoring portrait
     await Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => Scaffold(body: gameWidget)),
+      MaterialPageRoute(
+        builder:
+            (_) => PopScope(
+              canPop: false, // Disable back navigation
+              child: Scaffold(body: gameWidget),
+            ),
+      ),
     );
 
     // Restore menu orientation
