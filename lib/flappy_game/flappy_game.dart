@@ -36,7 +36,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   final double _edgeMargin = 80;        // keep gap away from top/bottom
   final double _maxCenterDelta = 140;   // limit vertical hop between pairs
   final double _minGap = 110;
-  final double _maxGap = 180;
+  final double _maxGap = 150;
 
   FlappyGame({this.onExitToMenu});
 
@@ -57,20 +57,38 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   }
 
   Future<void> initializeGame() async {
-    gameState = GameState.playing;
-    speed = 200;
+    previousHighScore = await HighscoreManager.getHighscore('flappy');
+    if (!hasShownIntro) {
+      gameState = GameState.intro;
+      speed = 0;
+    } else {
+      gameState = GameState.playing;
+      speed = 256;
+    }
+
     score = 0;
     distanceSinceLastPipe = 0;
 
     bird = Bird();
     add(bird);
 
-    // Start center around middle
     _lastCenterY = size.y * 0.5;
 
-    // Spawn an initial pair so it’s not empty
-    _spawnPipePair();
+    // Spawn first pipes immediately
+    if (gameState == GameState.playing) {
+      _spawnPipePair();
+    }
   }
+
+  void startFromIntro() {
+    if (gameState == GameState.intro) {
+      speed = 256;
+      _spawnPipePair();
+      gameState = GameState.playing;
+      hasShownIntro = true;
+    }
+  }
+
 
   // ======== SPAWNING LOGIC ========
   void _spawnPipePair() {
@@ -148,7 +166,9 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   void onTap() {
-    bird.flap();
+    if (gameState == GameState.playing) {
+      bird.flap();
+    }
   }
 
   // ======== GAME EVENTS ========
