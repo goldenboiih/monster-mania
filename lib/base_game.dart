@@ -8,12 +8,12 @@ import 'package:flamegame/ui/score.dart';
 
 import 'audio_manager.dart';
 
-enum GameState { playing, crashing, gameOver }
+enum GameState { intro, playing, crashing, gameOver }
 
 class BaseGame extends FlameGame {
   late int previousHighScore;
-  late int highScore;
-  late int speed;
+  int highScore = 0;
+  late double speed;
   late int score;
   late TextComponent scoreText;
   void restart() {

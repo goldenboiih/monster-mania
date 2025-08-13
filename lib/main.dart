@@ -101,21 +101,44 @@ class MainMenuScreen extends StatelessWidget {
         );
         break;
       case Game.flappy:
-      // Lock to landscape when game starts
         await SystemChrome.setPreferredOrientations([
           DeviceOrientation.landscapeLeft,
           DeviceOrientation.landscapeRight,
         ]);
-        gameWidget = GameWidget(
-          game: FlappyGame(
-            onExitToMenu: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          overlayBuilderMap: {
-            'GameOver':
-                (context, game) => GameOverOverlay(game: game as FlappyGame),
+
+        final flappy = FlappyGame(
+          onExitToMenu: () {
+            Navigator.of(context).pop();
           },
+        );
+
+        gameWidget = GameWidget(
+          game: flappy,
+          overlayBuilderMap: {
+            'GameOver': (context, game) =>
+                GameOverOverlay(game: game as FlappyGame),
+
+            // --- GET READY OVERLAY ---
+            'GetReady': (context, game) {
+              final g = game as FlappyGame;
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque, // catch the very first tap
+                onTap: () {
+                  g.startFromIntro();          // start the run
+                  g.overlays.remove('GetReady');
+                },
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/flappy/start_overlay.png',
+                    filterQuality: FilterQuality.none, // crisp pixels
+                    fit: BoxFit.contain,
+                    width: 480,
+                  ),
+                ),
+              );
+            },
+          },
+          initialActiveOverlays: const ['GetReady'], // show once at start
         );
         break;
       case Game.dash:

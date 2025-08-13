@@ -37,8 +37,10 @@ class Bird extends SpriteAnimationComponent
     super.update(dt);
 
     // Gravity
-    velocityY += game.gravity * dt;
-    y += velocityY * dt;
+    if (game.gameState == GameState.playing) {
+      velocityY += game.gravity * dt;
+      y += velocityY * dt;
+    }
 
     if (game.gameState == GameState.crashing) {
       // Smoothly rotate to downward facing

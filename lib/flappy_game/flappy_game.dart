@@ -14,7 +14,7 @@ import 'obstacles/pipe_pair.dart';
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
-
+  bool hasShownIntro = false;
   // Core feel
   final double floorHeight = 64;
   final double pipeSpacing = 256;
