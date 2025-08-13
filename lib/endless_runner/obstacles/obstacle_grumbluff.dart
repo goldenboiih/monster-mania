@@ -9,15 +9,16 @@ enum GrumbluffState { floatingIn, dropping, escapingRight, descending, chargingL
 
 class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
     with HasGameReference<EndlessRunnerGame>, ObstacleTag{
+  static const double _dropTriggerFrac = 0.60;
+  static const double _escapeTriggerFrac = 0.80;
+
   final double floatAmplitude = 6.0;
   final double floatSpeed = 4.0;
-  final double dropTriggerX = 500;
-  final double escapeTriggerX = 600;
 
   late double baseY;
   double floatTime = 0.0;
 
-  int totalDrops = 0;
+  late int totalDrops;
   late int dropsRemaining;
 
   late Timer dropIdleTimer;
@@ -77,7 +78,7 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
         x -= (game.speed + 100) * dt;
         floatTime += dt;
         y = baseY + sin(floatTime * floatSpeed) * floatAmplitude;
-        if (x <= dropTriggerX) {
+        if (x <= game.size.x * _dropTriggerFrac) {
           startDropping();
         }
         break;
@@ -91,7 +92,7 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
         x += game.speed * dt;
         floatTime += dt;
         y = baseY + sin(floatTime * floatSpeed) * floatAmplitude;
-        if (x >= escapeTriggerX) {
+        if (x >= game.size.x * _escapeTriggerFrac) {
           current = GrumbluffState.descending;
         }
         break;
