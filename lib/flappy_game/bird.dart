@@ -37,7 +37,7 @@ class Bird extends SpriteAnimationComponent
     super.update(dt);
 
     // Gravity
-    if (game.gameState == GameState.playing) {
+    if (game.gameState != GameState.intro) {
       velocityY += game.gravity * dt;
       y += velocityY * dt;
     }
