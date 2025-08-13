@@ -11,7 +11,6 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
     with HasGameReference<EndlessRunnerGame>, ObstacleTag{
   final double floatAmplitude = 6.0;
   final double floatSpeed = 4.0;
-  final double floorY = 311;
   final double dropTriggerX = 500;
   final double escapeTriggerX = 600;
 
@@ -99,7 +98,8 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
 
       case GrumbluffState.descending:
         y += game.speed * dt;
-        if (y >= floorY - size.y / 2) {
+
+        if (y >= game.size.y - game.floorHeight - (size.y / 2)) {
           current = GrumbluffState.chargingLeft;
         }
         break;
