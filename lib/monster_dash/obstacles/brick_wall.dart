@@ -33,7 +33,7 @@ class BrickWall extends PositionComponent with HasGameReference<MonsterDash> {
     super.update(dt);
 
     if (_state == WallState.slidingOut) {
-      final dx = (left ? -1 : 1) * game.speed * 2 * dt;
+      final dx = (left ? -1 : 1) * game.speed * 0.5 * dt;
       x += dx;
 
       if ((left && x + width < 0) || (!left && x > game.size.x)) {
