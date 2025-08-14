@@ -14,11 +14,15 @@ import 'obstacles/pipe_pair.dart';
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
+  @override
+  String get gameId => 'flappy';
+
   bool hasShownIntro = false;
 
   final double floorHeight = 64;
   final double pipeSpacing = 256;
   final gravity = 512;
+  final double initialSpeed = 256;
 
   late Bird bird;
   late GameState gameState;
@@ -63,7 +67,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
       speed = 0;
     } else {
       gameState = GameState.playing;
-      speed = 256;
+      speed = initialSpeed;
     }
 
     score = 0;
@@ -82,7 +86,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   void startFromIntro() {
     if (gameState == GameState.intro) {
-      speed = 256;
+      speed = initialSpeed;
       _spawnPipePair();
       gameState = GameState.playing;
       hasShownIntro = true;
@@ -169,22 +173,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     if (gameState == GameState.playing) {
       bird.flap();
     }
-  }
-
-  // ======== GAME EVENTS ========
-  Future<void> onGameOver() async {
-    FlameAudio.play('fall_2.mp3');
-    // await HighscoreManager.saveHighscore('flappy', highScore);
-    if (score > previousHighScore) {
-      highScore = score;
-      await HighscoreManager.saveHighscore('flappy', highScore);
-    } else
-      {
-        highScore = previousHighScore;
-      }
-    bird.startCrash();
-    gameState = GameState.gameOver;
-    overlays.add('GameOver');
   }
 
   void onPlayerCollision(PositionComponent other) {

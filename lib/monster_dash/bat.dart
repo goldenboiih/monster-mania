@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/util/utils.dart';
 
@@ -77,8 +78,9 @@ class Bat extends SpriteAnimationComponent
       angle = lerpDouble(angle, target, dt * angleLerpSpeed)!;
     }
 
-    // --- Bounds check ---
+    // Game over
     if (y > game.size.y || y < -height) {
+      FlameAudio.play('fall_2.mp3');
       removeFromParent();
       game.onGameOver();
     }

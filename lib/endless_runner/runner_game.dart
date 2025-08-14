@@ -23,6 +23,8 @@ class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
   @override
   final VoidCallback? onExitToMenu;
+  @override
+  String get gameId => 'runner';
 
   EndlessRunnerGame({this.onExitToMenu});
 
@@ -30,6 +32,7 @@ class EndlessRunnerGame extends BaseGame
   late Runner runner;
 
   late GameState gameState;
+
   // Difficulty ramp
   late double spawnInterval;    // seconds between spawns (starts here)
   final double minSpawnInterval = 0.6;
@@ -56,14 +59,16 @@ class EndlessRunnerGame extends BaseGame
     // TODO: Fix this hack.
     // Wait until we have a non-zero width that's larger than height (landscape)
     while (size.x <= 0 || size.x < size.y) {
-      await Future.delayed(const Duration(milliseconds: 16)); // ~1 frame
+      await Future.delayed(const Duration(milliseconds: 180)); // ~2 frame
     }
 
     super.onLoad();
     await initializeGame();
   }
 
+  @override
   Future<void> initializeGame() async {
+    previousHighScore = await HighscoreManager.getHighscore('runner');
     gameState = GameState.playing;
 
     distanceMeters = 0.0;
@@ -168,14 +173,6 @@ class EndlessRunnerGame extends BaseGame
       runner.die();
       FlameAudio.play('die.mp3');
     }
-  }
-
-  Future<void> onGameOver() async {
-    gameState = GameState.gameOver;
-    previousHighScore = await HighscoreManager.getHighscore('runner');
-    await HighscoreManager.saveHighscore('runner', score);
-    highScore = await HighscoreManager.getHighscore('runner');
-    overlays.add('GameOver');
   }
 
   @override

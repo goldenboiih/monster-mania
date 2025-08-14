@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 
 import 'flappy_game.dart';
@@ -53,6 +54,7 @@ class Bird extends SpriteAnimationComponent
 
     // End game when out of bounds
     if (y > game.size.y || y < -height) {
+      FlameAudio.play('fall_2.mp3');
       removeFromParent();
       game.onGameOver();
     }

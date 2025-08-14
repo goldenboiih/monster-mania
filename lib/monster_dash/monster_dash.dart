@@ -10,32 +10,44 @@ import 'bat.dart';
 import 'obstacles/brick_wall.dart';
 
 class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
+
   @override
   final VoidCallback? onExitToMenu;
+  @override
+
+  String get gameId => 'dash';
+
+  MonsterDash({this.onExitToMenu});
 
   bool isPressing = false;
 
+  // Difficulty tuning
   final gravity = 700;
-  late Bat bat;
+  double initialSpeed = 150;
+  double maxSpeed = 300;
+  double speedStep = 5;
 
-  late GameState gameState;
+  late Bat bat;
 
   late BrickWall leftWall;
   late BrickWall rightWall;
 
-  MonsterDash({this.onExitToMenu});
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    scoreText.position = Vector2(size.x / 2, 16);
-    speed = 300;
+
+    scoreText.position = Vector2(size.x / 2 - scoreText.width / 2, 16);
+    speed = initialSpeed;
     await initializeGame();
   }
 
+  @override
   Future<void> initializeGame() async {
+    previousHighScore = await HighscoreManager.getHighscore('dash');
     gameState = GameState.playing;
     score = 0;
+    speed = initialSpeed;
     bat = Bat();
     add(bat);
     leftWall = BrickWall(left: true);
@@ -43,18 +55,11 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
     add(rightWall);
   }
 
-
   @override
   void restart() {
     children.whereType<BrickWall>().forEach((c) => c.removeFromParent());
     initializeGame();
   }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-  }
-
 
   @override
   void onTapDown(TapDownInfo info) {
@@ -72,31 +77,12 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
     isPressing = false;
   }
 
-  Future<void> onGameOver() async {
-    FlameAudio.play('fall_2.mp3');
-    previousHighScore = await HighscoreManager.getHighscore('dash');
-    await HighscoreManager.saveHighscore('dash', score);
-    highScore = await HighscoreManager.getHighscore('dash');
-    bat.startCrash();
-    overlays.add('GameOver');
-    gameState = GameState.gameOver;
-  }
-
   void onPlayerCollision(PositionComponent other) {
     if (gameState == GameState.playing && other.parent is BrickWall) {
       FlameAudio.play('die.mp3');
       bat.startCrash();
       gameState = GameState.crashing;
     }
-  }
-  void spawnLeftWall() {
-    leftWall = BrickWall(left: true);
-    add(leftWall);
-  }
-
-  void spawnRightWall() {
-    rightWall = BrickWall(left: false);
-    add(rightWall);
   }
 
   void onBatBounceLeftToRight() {
