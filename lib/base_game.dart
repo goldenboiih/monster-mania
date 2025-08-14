@@ -10,14 +10,14 @@ import 'audio_manager.dart';
 
 enum GameState { intro, playing, crashing, gameOver }
 
-class BaseGame extends FlameGame {
+abstract class BaseGame extends FlameGame {
   late int previousHighScore;
-  int highScore = 0;
+  late int highScore;
   late double speed;
   late int score;
   late TextComponent scoreText;
-  void restart() {
-  }
+
+  void restart() {}
 
   VoidCallback? onExitToMenu;
 
