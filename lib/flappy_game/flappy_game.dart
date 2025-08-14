@@ -15,7 +15,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
   bool hasShownIntro = false;
-  // Core feel
+
   final double floorHeight = 64;
   final double pipeSpacing = 256;
   final gravity = 512;
@@ -174,12 +174,17 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   // ======== GAME EVENTS ========
   Future<void> onGameOver() async {
     FlameAudio.play('fall_2.mp3');
-    previousHighScore = await HighscoreManager.getHighscore('flappy');
-    await HighscoreManager.saveHighscore('flappy', score);
-    highScore = await HighscoreManager.getHighscore('flappy');
+    // await HighscoreManager.saveHighscore('flappy', highScore);
+    if (score > previousHighScore) {
+      highScore = score;
+      await HighscoreManager.saveHighscore('flappy', highScore);
+    } else
+      {
+        highScore = previousHighScore;
+      }
     bird.startCrash();
-    overlays.add('GameOver');
     gameState = GameState.gameOver;
+    overlays.add('GameOver');
   }
 
   void onPlayerCollision(PositionComponent other) {
@@ -187,7 +192,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
       FlameAudio.play('die.mp3');
       bird.startCrash();
       gameState = GameState.crashing;
-      overlays.add('GameOver');
     }
   }
 
