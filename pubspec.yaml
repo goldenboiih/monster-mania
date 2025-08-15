@@ -70,7 +70,6 @@ flutter:
     - assets/audio/
     - assets/images/monster_blue/
     - assets/images/floor.png
-    - assets/images/cloud.png
     - assets/images/spiky/
     - assets/images/floaty/
     - assets/images/fly_guy/
