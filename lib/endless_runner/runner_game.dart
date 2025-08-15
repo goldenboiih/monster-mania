@@ -8,7 +8,6 @@ import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
 import 'package:flamegame/ui/crouch_button.dart';
 import 'package:flamegame/ui/jump_button.dart';
-import 'package:flamegame/world/background.dart';
 import 'package:flamegame/world/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +22,7 @@ class EndlessRunnerGame extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
   @override
   final VoidCallback? onExitToMenu;
+
   @override
   String get gameId => 'runner';
 
@@ -34,16 +34,16 @@ class EndlessRunnerGame extends BaseGame
   late GameState gameState;
 
   // Difficulty ramp
-  late double spawnInterval;    // seconds between spawns (starts here)
+  late double spawnInterval; // seconds between spawns (starts here)
   final double minSpawnInterval = 0.6;
-  final double spawnStep = 0.1;    // subtract this when ramping
+  final double spawnStep = 0.1; // subtract this when ramping
 
   final double initialSpeed = 400;
-  final double speedStep = 40;        // add this each ramp
+  final double speedStep = 40; // add this each ramp
   final double maxSpeed = 800;
 
-  double difficultyClock = 0.0;    // seconds since last ramp
-  final double rampEvery = 8.0;    // ramp every N seconds
+  double difficultyClock = 0.0; // seconds since last ramp
+  final double rampEvery = 8.0; // ramp every N seconds
 
   // Distance-based scoring
   // Define how many pixels are "one meter" for your UI
@@ -61,8 +61,28 @@ class EndlessRunnerGame extends BaseGame
     while (size.x <= 0 || size.x < size.y) {
       await Future.delayed(const Duration(milliseconds: 180)); // ~2 frame
     }
-
     super.onLoad();
+    final double floorTopY = size.y - floorHeight;
+    final double parallaxHeight = floorTopY; // everything above the floor
+
+    final parallax = await loadParallaxComponent(
+      [
+        ParallaxImageData('jungle_bg.png'),
+      ],
+      baseVelocity: Vector2(20, 0),
+      velocityMultiplierDelta: Vector2(5, 0.0),
+      repeat: ImageRepeat.repeatX, // only scroll/tile horizontally
+      priority: -1,
+      size: Vector2(size.x, parallaxHeight), // don't cover the floor area
+    );
+
+    // Place the parallax so its bottom sits on top of the floor
+    parallax.anchor = Anchor.bottomLeft;
+    parallax.position = Vector2(0, floorTopY);
+    add(parallax);
+    add(Floor(tileHeight: floorHeight));
+    add(JumpButton());
+    add(CrouchButton());
     await initializeGame();
   }
 
@@ -80,23 +100,10 @@ class EndlessRunnerGame extends BaseGame
 
     _createObstacleTimer(spawnInterval);
 
-    add(Background());
-    add(Floor(tileHeight: floorHeight));
+    // add(Background());
 
     runner = Runner();
     add(runner);
-
-    final parallax = await loadParallaxComponent(
-      [ParallaxImageData('flappy/background.png')],
-      baseVelocity: Vector2(20, 0),
-      repeat: ImageRepeat.repeat,
-      velocityMultiplierDelta: Vector2(1.0, 0.0),
-      priority: -1,
-    );
-    add(parallax);
-
-    add(JumpButton());
-    add(CrouchButton());
   }
 
   void _createObstacleTimer(double interval) {
@@ -168,7 +175,7 @@ class EndlessRunnerGame extends BaseGame
 
   void onPlayerCollision(PositionComponent other) {
     if (gameState == GameState.crashing) return;
-    if ( other is ObstacleTag) {
+    if (other is ObstacleTag) {
       gameState = GameState.crashing;
       runner.die();
       FlameAudio.play('die.mp3');
@@ -188,8 +195,12 @@ class EndlessRunnerGame extends BaseGame
 
   // Keyboard controls for development
   @override
-  KeyEventResult onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event.logicalKey == LogicalKeyboardKey.arrowUp && event is KeyDownEvent) {
+  KeyEventResult onKeyEvent(
+    KeyEvent event,
+    Set<LogicalKeyboardKey> keysPressed,
+  ) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+        event is KeyDownEvent) {
       runner.jump();
       return KeyEventResult.handled;
     }
