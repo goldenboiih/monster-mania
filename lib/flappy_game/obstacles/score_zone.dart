@@ -1,12 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flamegame/flappy_game/flappy_game.dart';
+import 'package:flamegame/flappy_game/bird.dart';
 import 'package:flamegame/base_game.dart';
 
-import 'package:flamegame/wooly_wings//wooly_wings_game.dart';
-import 'package:flamegame/wooly_wings/bird.dart';
-
 class ScoreZone extends PositionComponent
-    with HasGameReference<WoolyWings>, CollisionCallbacks {
+    with HasGameReference<FlappyGame>, CollisionCallbacks {
 
   ScoreZone({required Vector2 size}) {
     this.size = size;
@@ -22,7 +21,7 @@ class ScoreZone extends PositionComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (game.gameState == GameState.playing && other is Wooly) {
+    if (game.gameState == GameState.playing && other is Bird) {
       game.increaseScore();
       removeFromParent(); // remove zone after scoring
     }
