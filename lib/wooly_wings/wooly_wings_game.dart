@@ -6,16 +6,15 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/highscore_manager.dart';
 import 'bird.dart';
 import 'obstacles/pipe.dart';
 import 'obstacles/pipe_pair.dart';
 
-class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
+class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
   @override
-  String get gameId => 'flappy';
+  String get gameId => 'wooly';
 
   bool hasShownIntro = false;
 
@@ -24,8 +23,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   final gravity = 512;
   final double initialSpeed = 256;
 
-  late Bird bird;
-  late GameState gameState;
+  late Wooly wooly;
 
   // Spawn pacing
   late double distanceSinceLastPipe;
@@ -42,7 +40,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   final double _minGap = 110;
   final double _maxGap = 150;
 
-  FlappyGame({this.onExitToMenu});
+  WoolyWings({this.onExitToMenu});
 
   @override
   Future<void> onLoad() async {
@@ -60,8 +58,9 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     add(parallax);
   }
 
+  @override
   Future<void> initializeGame() async {
-    previousHighScore = await HighscoreManager.getHighscore('flappy');
+    super.initializeGame();
     if (!hasShownIntro) {
       gameState = GameState.intro;
       speed = 0;
@@ -73,8 +72,8 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     score = 0;
     distanceSinceLastPipe = 0;
 
-    bird = Bird();
-    add(bird);
+    wooly = Wooly();
+    add(wooly);
 
     _lastCenterY = size.y * 0.5;
 
@@ -92,7 +91,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
       hasShownIntro = true;
     }
   }
-
 
   // ======== SPAWNING LOGIC ========
   void _spawnPipePair() {
@@ -151,7 +149,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     // Keep background (priority -1) but remove pipes & bird
     children.whereType<PipePair>().forEach((c) => c.removeFromParent());
     children.whereType<Pipe>().forEach((c) => c.removeFromParent());
-    children.whereType<Bird>().forEach((c) => c.removeFromParent());
+    children.whereType<Wooly>().forEach((c) => c.removeFromParent());
     initializeGame();
   }
 
@@ -171,14 +169,14 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   void onTap() {
     if (gameState == GameState.playing) {
-      bird.flap();
+      wooly.flap();
     }
   }
 
   void onPlayerCollision(PositionComponent other) {
     if (gameState == GameState.playing && other is Pipe) {
       FlameAudio.play('die.mp3');
-      bird.startCrash();
+      wooly.startCrash();
       gameState = GameState.crashing;
     }
   }

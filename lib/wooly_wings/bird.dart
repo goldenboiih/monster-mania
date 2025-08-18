@@ -4,18 +4,18 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/wooly_wings/wooly_wings_game.dart';
 
-import 'flappy_game.dart';
 
-class Bird extends SpriteAnimationComponent
-    with HasGameReference<FlappyGame>, CollisionCallbacks {
+class Wooly extends SpriteAnimationComponent
+    with HasGameReference<WoolyWings>, CollisionCallbacks {
   double jumpSpeed = -200;
   double velocityY = 0;
 
   double targetAngle = 0;
   double angleLerpSpeed = 5; // Higher = faster reaction, lower = smoother
 
-  Bird() : super(size: Vector2(48, 48));
+  Wooly() : super(size: Vector2(48, 48));
 
   @override
   Future<void> onLoad() async {
