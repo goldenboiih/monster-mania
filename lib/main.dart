@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'endless_runner/runner_game.dart';
-import 'flappy_game/flappy_game.dart';
+import 'wooly_wings/wooly_wings_game.dart';
 import 'monster_maker/avatar_maker_screen.dart';
 import 'overlays/game_over_overlay.dart';
 
@@ -136,16 +136,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         );
       case Game.flappy:
         return GameWidget(
-          game: FlappyGame(
+          game: WoolyWings(
             onExitToMenu: () {
               Navigator.of(context).pop();
             },
           ),
           overlayBuilderMap: {
             'GameOver':
-                (context, game) => GameOverOverlay(game: game as FlappyGame),
+                (context, game) => GameOverOverlay(game: game as WoolyWings),
             'GetReady': (context, game) {
-              final g = game as FlappyGame;
+              final g = game as WoolyWings;
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
