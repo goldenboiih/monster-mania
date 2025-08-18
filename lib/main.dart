@@ -45,10 +45,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   void initState() {
     super.initState();
     // Ensure menu is always portrait
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    Flame.device.setPortrait();
   }
 
   @override
@@ -69,17 +66,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () => _openGame(context, Game.endlessRunner),
+              onPressed: () => _openGame(context, Game.endlessRunner, Orientation.landscape),
               child: const Text('Start Endless Runner'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _openGame(context, Game.flappy),
+              onPressed: () => _openGame(context, Game.flappy, Orientation.landscape),
               child: const Text('Flappy Game'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _openGame(context, Game.dash),
+              onPressed: () => _openGame(context, Game.dash, Orientation.portrait),
               child: const Text('Monster Dash'),
             ),
             const SizedBox(height: 20),
@@ -97,40 +94,53 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     );
   }
 
-  static Future<void> _openGame(BuildContext context, Game gameType) async {
-    Widget gameWidget;
+  static Future<void> _openGame(
+      BuildContext context,
+      Game gameType,
+      Orientation orientation,
+      ) async {
+    final navigator = Navigator.of(context); // capture before awaits
+    if (orientation == Orientation.landscape) {
+      await Flame.device.setLandscape();
+    } else {
+      await Flame.device.setPortrait();
+    }
 
+    // Wait until constraints have updated to the desired orientation
+    while (MediaQuery.of(context).orientation != orientation) {
+      await WidgetsBinding.instance.endOfFrame;
+      if (!context.mounted) return; // safety
+    }
+
+    // Now it's safe to create the GameWidget with correct (landscape) sizes
+    final gameWidget = _buildGameWidget(gameType, context);
+    await navigator.push(MaterialPageRoute(
+      builder: (_) => PopScope(
+        canPop: false,
+        child: Scaffold(body: gameWidget),
+      ),
+    ));
+
+    await Flame.device.setPortrait();
+  }
+
+// build the GameWidget only after orientation settled
+  static Widget _buildGameWidget(Game gameType, BuildContext context) {
     switch (gameType) {
       case Game.endlessRunner:
-        await SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ]);
-        gameWidget = GameWidget(
-          game: EndlessRunnerGame(
+        return GameWidget(
+          game: EndlessRunnerGame(onExitToMenu: () => Navigator.of(context).pop()),
+          overlayBuilderMap: {
+            'GameOver': (ctx, g) => GameOverOverlay(game: g as EndlessRunnerGame),
+          },
+        );
+      case Game.flappy:
+        return GameWidget(
+          game: FlappyGame(
             onExitToMenu: () {
               Navigator.of(context).pop();
             },
           ),
-          overlayBuilderMap: {
-            'GameOver':
-                (context, game) => GameOverOverlay(game: game as EndlessRunnerGame),
-          },
-        );
-        break;
-
-      case Game.flappy:
-        await SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight,
-        ]);
-        final flappy = FlappyGame(
-          onExitToMenu: () {
-            Navigator.of(context).pop();
-          },
-        );
-        gameWidget = GameWidget(
-          game: flappy,
           overlayBuilderMap: {
             'GameOver':
                 (context, game) => GameOverOverlay(game: game as FlappyGame),
@@ -155,14 +165,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           },
           initialActiveOverlays: const ['GetReady'],
         );
-        break;
-
       case Game.dash:
-        await SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ]);
-        gameWidget = GameWidget(
+        return GameWidget(
           game: MonsterDash(
             onExitToMenu: () {
               Navigator.of(context).pop();
@@ -173,24 +177,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 (context, game) => GameOverOverlay(game: game as MonsterDash),
           },
         );
-        break;
     }
-
-    // Await route to finish before restoring portrait
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder:
-            (_) => PopScope(
-              canPop: false, // Disable back navigation
-              child: Scaffold(body: gameWidget),
-            ),
-      ),
-    );
-
-    // Restore menu orientation
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
   }
+
 }

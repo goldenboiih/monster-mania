@@ -12,6 +12,7 @@ import 'package:flamegame/world/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
+import 'diagnostics_overlay.dart';
 import 'obstacles/obstacle_fly_guy.dart';
 import 'obstacles/obstacle_grumbluff.dart';
 import 'obstacles/obstacle_spiky.dart';
@@ -56,11 +57,6 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   Future<void> onLoad() async {
-    // TODO: Fix this hack.
-    // Wait until we have a non-zero width that's larger than height (landscape)
-    while (size.x <= 0 || size.x < size.y) {
-      await Future.delayed(const Duration(milliseconds: 180)); // ~2 frame
-    }
     super.onLoad();
     final double floorTopY = size.y - floorHeight;
     final double parallaxHeight = floorTopY; // everything above the floor
@@ -80,9 +76,14 @@ class EndlessRunnerGame extends BaseGame
     parallax.anchor = Anchor.bottomLeft;
     parallax.position = Vector2(0, floorTopY);
     add(parallax);
+
     add(Floor(tileHeight: floorHeight));
     add(JumpButton());
     add(CrouchButton());
+    assert(() {
+      add(DiagnosticsOverlay());
+      return true;
+    }());
     await initializeGame();
   }
 
@@ -184,6 +185,7 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   void restart() {
+    print('Total children: ${children.length}');
     // iterate components and filter by the tag
     for (final c in children.whereType<ObstacleTag>()) {
       (c as Component).removeFromParent();
