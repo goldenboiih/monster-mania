@@ -6,11 +6,11 @@ import 'package:flamegame/flappy_game/obstacles/score_zone.dart';
 
 class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
   PipePair({
-    required super.position,      // initial center (x, y)
-    required this.gap,            // hole size
+    required super.position,      // center of the gap at spawn
+    required this.gap,
     required this.pipeWidth,
-    double? oscillationAmplitude, // optional: pixels
-    double? oscillationSpeed,     // optional: cycles per second
+    double? oscillationAmplitude, // pixels; if null we randomize
+    double? oscillationSpeed,     // Hz; if null we randomize
   })  : _requestedAmp = oscillationAmplitude,
         _requestedSpeed = oscillationSpeed,
         super(priority: -1);
@@ -18,22 +18,26 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
   final double gap;
   final double pipeWidth;
 
-  // Oscillation config (randomized if not provided)
   final double? _requestedAmp;
   final double? _requestedSpeed;
 
-  // Internal oscillation state
+  // Oscillation state
   late final double _baseY;
-  late final double _phase;          // random phase so not all pairs sync
-  late final double _freq;           // Hz
-  late double _amp;                  // pixels (clamped to screen)
-  double _t = 0;                     // time accumulator
+  late final double _phase;
+  late final double _freq;   // Hz
+  late double _amp;          // pixels
+  double _t = 0;
+
+  // Keep the gap from touching screen edges
+  final double _edgeMargin = 80;
+  // Ensure some visible movement
+  final double _minAmp = 8;  // <- guarantees movement
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
 
-    // Build pipes around the local center (0,0)
+    // Build around local (0,0)
     final topPipe = Pipe(
       isFlipped: true,
       position: Vector2(0, -gap / 2),
@@ -44,50 +48,43 @@ class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
       position: Vector2(0, gap / 2),
       pipeWidth: pipeWidth,
     );
-
-    // Scoring zone in the middle of the gap
-    final scoreZone = ScoreZone(size: Vector2(10, gap))..position = Vector2.zero();
+    final scoreZone = ScoreZone(size: Vector2(10, gap))
+      ..position = Vector2.zero();
 
     addAll([topPipe, bottomPipe, scoreZone]);
 
-    // --- Oscillation setup ---
+    // --- Oscillation config ---
     _baseY = position.y;
     final rnd = Random();
-
-    // Randomize phase so consecutive pairs aren't in lockstep
     _phase = rnd.nextDouble() * pi * 2;
+    _freq = _requestedSpeed ?? (0.35 + rnd.nextDouble() * 0.25); // 0.35–0.60 Hz
 
-    // Speed (Hz, i.e., cycles per second)
-    _freq = _requestedSpeed ?? (0.25 + rnd.nextDouble() * 0.35); // ~0.25–0.6 Hz
+    final requested = _requestedAmp ?? (40 + rnd.nextDouble() * 35); // 40–75 px
 
-    // Requested amplitude or randomized default
-    final requestedAmp = _requestedAmp ?? (30 + rnd.nextDouble() * 40); // ~30–70 px
+    // Clamp amplitude so center±amp keeps the hole within safe band
+    final minCenter = gap / 2 + _edgeMargin;
+    final maxCenter = game.size.y - gap / 2 - _edgeMargin;
+    final allowedTop = max(0, _baseY - minCenter);
+    final allowedBottom = max(0, maxCenter - _baseY);
+    final allowed = min(allowedTop, allowedBottom).toDouble();
 
-    // Clamp amplitude so the center never pushes pipes off-screen
-    // Keep at least 40 px margin from edges for sprites
-    final margin = 40.0;
-    final topLimit = gap / 2 + margin;
-    final bottomLimit = game.size.y - gap / 2 - margin;
-
-    // Maximum allowed amplitude around the chosen baseY
-    final allowedTop = _baseY - topLimit;
-    final allowedBottom = bottomLimit - _baseY;
-    _amp = max(0, min(requestedAmp, min(allowedTop, allowedBottom)));
+    // Guarantee at least _minAmp so it always moves
+    _amp = max(_minAmp, min(requested, allowed));
   }
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    // Horizontal scroll
+    // Scroll left with world speed
     x -= game.speed * dt;
 
-    // Vertical oscillation of the whole pair
+    // Vertical oscillation
     _t += dt;
     final dy = sin((_t * _freq * 2 * pi) + _phase) * _amp;
     y = _baseY + dy;
 
-    // Cull when fully off-screen to the left
+    // Remove when off-screen (uses pipeWidth as approximate width)
     if (x + pipeWidth < 0) {
       removeFromParent();
     }
