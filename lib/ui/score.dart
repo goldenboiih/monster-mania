@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:flamegame/games/base_game.dart';
+import 'package:flamegame/base_game.dart';
 import 'package:flutter/material.dart';
 
 class ScoreText extends TextComponent with HasGameReference<BaseGame> {

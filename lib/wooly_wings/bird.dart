@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flamegame/games/base_game.dart';
-import 'package:flamegame/games/wooly_wings/wooly_wings_game.dart';
+import 'package:flamegame/base_game.dart';
+import 'package:flamegame/wooly_wings/wooly_wings_game.dart';
 
 
 class Wooly extends SpriteAnimationComponent

@@ -5,8 +5,8 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/ui/music_toggle.dart';
 import 'package:flamegame/ui/score.dart';
 
-import '../audio_manager.dart';
-import '../highscore_manager.dart';
+import 'audio_manager.dart';
+import 'highscore_manager.dart';
 
 enum GameState { intro, playing, crashing, gameOver }
 
@@ -20,10 +20,7 @@ abstract class BaseGame extends FlameGame {
   late ScoreText scoreText;
   late GameState gameState;
 
-  Future<void> initializeGame() async {
-    previousHighScore = await HighscoreManager.getHighscore(gameId);
-  }
-
+  void initializeGame() {}
   void restart() {}
 
   Future<void> onGameOver() async {

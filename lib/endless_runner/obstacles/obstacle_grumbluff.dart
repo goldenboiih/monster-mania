@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flamegame/games/endless_runner/runner_game.dart';
+import 'package:flamegame/endless_runner/runner_game.dart';
 import 'grumbluff_drop.dart';
 import 'obstacle_tag.dart';
 

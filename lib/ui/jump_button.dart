@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flamegame/games/endless_runner/runner_game.dart';
+import 'package:flamegame/endless_runner/runner_game.dart';
 
 class JumpButton extends SpriteComponent
     with HasGameReference<EndlessRunnerGame>, TapCallbacks {

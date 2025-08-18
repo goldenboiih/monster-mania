@@ -5,7 +5,7 @@ import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:flamegame/games/base_game.dart';
+import 'package:flamegame/base_game.dart';
 import 'bird.dart';
 import 'obstacles/pipe.dart';
 import 'obstacles/pipe_pair.dart';
