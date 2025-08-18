@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/palette.dart';
-import 'package:flamegame/base_game.dart';
+import 'package:flamegame/games/base_game.dart';
 
 class Background extends PositionComponent with HasGameReference<BaseGame> {
   Background() : super(priority: -10);

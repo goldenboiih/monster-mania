@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flamegame/audio_manager.dart';
-import 'package:flamegame/base_game.dart';
+import 'package:flamegame/games/base_game.dart';
 
 class MusicToggle extends SpriteComponent with TapCallbacks, HasGameReference<BaseGame> {
   late bool isMusicOn;

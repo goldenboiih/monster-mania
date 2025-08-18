@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flame/components.dart';
-import 'package:flamegame/monster_dash/monster_dash.dart';
+import 'package:flamegame/games/monster_dash/monster_dash.dart';
 import 'brick.dart';
 
 enum WallState { idle, slidingOut, hidden }

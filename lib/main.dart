@@ -1,13 +1,13 @@
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flamegame/monster_dash/monster_dash.dart';
+import 'package:flamegame/games/monster_dash/monster_dash.dart';
+import 'package:flamegame/games/monster_maker/avatar_maker_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'endless_runner/runner_game.dart';
-import 'wooly_wings/wooly_wings_game.dart';
-import 'monster_maker/avatar_maker_screen.dart';
-import 'overlays/game_over_overlay.dart';
+import 'package:flamegame/games/endless_runner/runner_game.dart';
+import 'package:flamegame/games/wooly_wings/wooly_wings_game.dart';
+import 'package:flamegame/overlays/game_over_overlay.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

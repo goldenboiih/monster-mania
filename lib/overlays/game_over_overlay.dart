@@ -1,7 +1,7 @@
 import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flamegame/base_game.dart';
+import 'package:flamegame/games/base_game.dart';
 
 class GameOverOverlay extends StatelessWidget {
   final BaseGame game;
@@ -174,9 +174,9 @@ class GameOverOverlay extends StatelessWidget {
   }
 
   _Medal _pickMedal(int score) {
-    if (score >= 30) return _Medal('assets/images/medal_gold.png');
-    if (score >= 20) return _Medal('assets/images/medal_silver.png');
-    if (score >= 10) return _Medal('assets/images/medal_bronze.png');
+    if (score >= 30) return _Medal('assets/images/brick.png');
+    if (score >= 20) return _Medal('assets/images/brick.png');
+    if (score >= 10) return _Medal('assets/images/brick.png');
     return const _Medal(null);
   }
 }

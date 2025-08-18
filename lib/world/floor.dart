@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flamegame/base_game.dart';
+import 'package:flamegame/games/base_game.dart';
 
 class Floor extends Component with HasGameReference<BaseGame> {
   final List<SpriteComponent> tiles = [];

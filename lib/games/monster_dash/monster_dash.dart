@@ -2,7 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flamegame/base_game.dart';
+import 'package:flamegame/games/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
 import 'package:flutter/cupertino.dart';
 
