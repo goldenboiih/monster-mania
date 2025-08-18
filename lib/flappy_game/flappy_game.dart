@@ -25,7 +25,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   final double initialSpeed = 256;
 
   late Bird bird;
-  late GameState gameState;
 
   // Spawn pacing
   late double distanceSinceLastPipe;
