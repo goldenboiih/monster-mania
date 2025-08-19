@@ -59,6 +59,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     add(parallax);
   }
 
+  @override
   Future<void> initializeGame() async {
     previousHighScore = await HighscoreManager.getHighscore('flappy');
     if (!hasShownIntro) {
