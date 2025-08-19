@@ -36,8 +36,9 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    score = 0;
+
     scoreText.position = Vector2(size.x / 2 - scoreText.width / 2, 16);
-    await initializeGame();
   }
 
   @override

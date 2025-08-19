@@ -175,7 +175,26 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           overlayBuilderMap: {
             'GameOver':
                 (context, game) => GameOverOverlay(game: game as MonsterDash),
+            'GetReady': (context, game) {
+              final g = game as MonsterDash;
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  g.initializeGame();
+                  g.overlays.remove('GetReady');
+                },
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/overlays/monster_dash.png',
+                    filterQuality: FilterQuality.none,
+                    fit: BoxFit.contain,
+                    width: 480,
+                  ),
+                ),
+              );
+            },
           },
+          initialActiveOverlays: const ['GetReady'],
         );
     }
   }
