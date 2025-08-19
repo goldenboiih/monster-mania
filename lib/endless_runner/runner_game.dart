@@ -8,7 +8,7 @@ import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
 import 'package:flamegame/endless_runner/ui/crouch_button.dart';
 import 'package:flamegame/endless_runner/ui/jump_button.dart';
-import 'package:flamegame/world/floor.dart';
+import 'package:flamegame/endless_runner/world/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
