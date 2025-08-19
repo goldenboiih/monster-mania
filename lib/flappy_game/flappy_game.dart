@@ -1,12 +1,13 @@
 import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'bird.dart';
 import 'obstacles/pipe.dart';
 import 'obstacles/pipe_pair.dart';
@@ -14,6 +15,7 @@ import 'obstacles/pipe_pair.dart';
 class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
+
   @override
   String get gameId => 'flappy';
 
@@ -36,8 +38,8 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
 
   // Config
   final double _pipeWidth = 64;
-  final double _edgeMargin = 80;        // keep gap away from top/bottom
-  final double _maxCenterDelta = 140;   // limit vertical hop between pairs
+  final double _edgeMargin = 80; // keep gap away from top/bottom
+  final double _maxCenterDelta = 140; // limit vertical hop between pairs
   final double _minGap = 110;
   final double _maxGap = 150;
 
@@ -93,11 +95,11 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     }
   }
 
-
   // ======== SPAWNING LOGIC ========
   void _spawnPipePair() {
     // 1) Gap scales with score (harder over time, within bounds)
-    final targetGap = (_maxGap - min(30, score * 2)).clamp(_minGap, _maxGap).toDouble();
+    final targetGap =
+        (_maxGap - min(30, score * 2)).clamp(_minGap, _maxGap).toDouble();
 
     // 2) Pick a new center Y with limited vertical jump from previous
     final minCenter = targetGap / 2 + _edgeMargin;
@@ -110,7 +112,8 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     // 3) Decide if this pair moves (fair, with cooldown)
     //    Base chance grows a bit with score, but capped; forced cooldown after a mover.
     final baseMoveChance = (0.20 + score * 0.01).clamp(0.20, 0.55);
-    final canMove = _sinceLastMover >= 2; // require at least 2 static between movers
+    final canMove =
+        _sinceLastMover >= 2; // require at least 2 static between movers
     final willMove = canMove && (_rng.nextDouble() < baseMoveChance);
 
     // 4) If moving, pick sane amplitude & speed, clamped so we don’t hit edges
@@ -122,7 +125,10 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
       final requestedAmp = 30 + _rng.nextDouble() * 40;
       final allowedTop = centerY - (targetGap / 2 + _edgeMargin);
       final allowedBottom = (size.y - targetGap / 2 - _edgeMargin) - centerY;
-      oscillationAmplitude = max(0, min(requestedAmp, min(allowedTop, allowedBottom)));
+      oscillationAmplitude = max(
+        0,
+        min(requestedAmp, min(allowedTop, allowedBottom)),
+      );
     }
 
     // 5) Track mover cooldown
@@ -144,6 +150,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
       ),
     );
   }
+
   // =====================================
 
   @override
