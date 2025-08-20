@@ -17,7 +17,7 @@ class Bat extends SpriteAnimationComponent
   double angleLerpSpeed = 5;
   final double climbSpeed = 260;
 
-  Bat() : super(size: Vector2(48, 48));
+  Bat() : super(size: Vector2(28 * 2.2, 19 * 2.2));
   late bool _facingRight;
 
   bool get isFacingRight => _facingRight;
@@ -28,13 +28,13 @@ class Bat extends SpriteAnimationComponent
     velocityX = game.speed;
     position = Vector2(game.size.x / 4, game.size.y / 4);
     await super.onLoad();
-    animation = await loadSpriteAnimation(
-      images: [
-        'flappy/flappy_1.png',
-        'flappy/flappy_2.png',
-        'flappy/flappy_3.png',
-      ],
-      stepTime: 0.1,
+    animation = await game.loadSpriteAnimation(
+      'bat/boom_bat.png',
+      SpriteAnimationData.sequenced(
+        amount: 3,
+        stepTime: .1,
+        textureSize: Vector2(28, 19),
+      ),
     );
     add(RectangleHitbox());
   }
@@ -43,7 +43,9 @@ class Bat extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
 
-    if (game.gameState != GameState.playing && game.gameState != GameState.crashing) return;
+    if (game.gameState != GameState.playing &&
+        game.gameState != GameState.crashing)
+      return;
 
     // --- Vertical motion ---
     if (game.gameState == GameState.playing) {
