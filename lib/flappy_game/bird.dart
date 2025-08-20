@@ -21,14 +21,13 @@ class Bird extends SpriteAnimationComponent
   Future<void> onLoad() async {
     position = Vector2(game.size.x / 8, game.size.y / 4);
     await super.onLoad();
-    final images = await Future.wait([
-      game.images.load('flappy/flappy_1.png'),
-      game.images.load('flappy/flappy_2.png'),
-      game.images.load('flappy/flappy_3.png'),
-    ]);
-    animation = SpriteAnimation.spriteList(
-      images.map((img) => Sprite(img)).toList(),
-      stepTime: 0.1,
+    animation = await game.loadSpriteAnimation(
+      'flappy/bird.png',
+      SpriteAnimationData.sequenced(
+        amount: 4,
+        stepTime: .1,
+        textureSize: Vector2(29, 26),
+      ),
     );
     add(RectangleHitbox());
   }

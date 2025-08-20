@@ -72,6 +72,7 @@ flutter:
     - assets/images/overlays/
     - assets/images/floor.png
     - assets/images/spiky/
+    - assets/images/clouds/
     - assets/images/floaty/
     - assets/images/fly_guy/
     - assets/images/grumbluff/
