@@ -105,6 +105,7 @@ class Bat extends SpriteAnimationComponent
   void _flipIfNeeded(bool facingRight) {
     if (_facingRight != facingRight) {
       game.increaseScore();
+      FlameAudio.play('click.mp3');
       flipHorizontallyAroundCenter();
       _facingRight = facingRight;
 

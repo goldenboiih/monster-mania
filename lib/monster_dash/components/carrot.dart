@@ -34,7 +34,7 @@ class Carrot extends SpriteComponent
 
   void collect() {
     if (game.gameState == GameState.playing) {
-      FlameAudio.play('coin.mp3');
+      FlameAudio.play('eat.mp3');
       game.increaseScore();
       removeFromParent();
     }
