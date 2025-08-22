@@ -16,7 +16,7 @@ abstract class BaseGame extends FlameGame {
   late int previousHighScore;
   late int highScore;
   late double speed;
-  late int score;
+  int score = 0;
   late ScoreText scoreText;
   late GameState gameState;
 

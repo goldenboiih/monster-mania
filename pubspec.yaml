@@ -78,12 +78,14 @@ flutter:
     - assets/images/bat/
     - assets/images/grumbluff/
     - assets/images/flappy/
+    - assets/images/dungeon_dash/
     - assets/images/ui/
     - assets/images/monster_maker/bodies/
     - assets/images/monster_maker/eyes/
     - assets/images/monster_maker/horns/
     - assets/images/monster_maker/mouths/
     - assets/images/pipe/
+    - assets/images/blocks/
     - assets/audio/
   fonts:
     - family: BotsMatic

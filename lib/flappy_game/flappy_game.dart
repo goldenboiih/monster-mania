@@ -151,8 +151,6 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
     );
   }
 
-  // =====================================
-
   @override
   void restart() {
     // Keep background (priority -1) but remove pipes & bird

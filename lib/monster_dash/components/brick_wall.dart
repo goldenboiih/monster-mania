@@ -45,51 +45,63 @@ class BrickWall extends PositionComponent with HasGameReference<MonsterDash> {
   Future<void> buildBricks() async {
     removeAll(children);
 
-    final numBricks = (game.size.y / brickHeight).floor();
+    final rng = Random();
+
+    // Fill the full height (no bottom sliver)
+    final numBricks = (game.size.y / brickHeight).ceil();
+
     final gapSizeInBricks = (gapHeight / brickHeight).ceil();
 
-    // Valid gap starts: not at the first or last rows
-    final availableIndices = List.generate(
-      numBricks - 2, // exclude first and last rows
-          (i) => i + 1,   // start from index 1
+    // If you want the component's size to match the stack exactly:
+    size = Vector2(brickHeight, numBricks * brickHeight);
+
+    // Guard: if too small to place a gap away from edges, build solid wall
+    if (numBricks < gapSizeInBricks + 2) {
+      for (int i = 0; i < numBricks; i++) {
+        add(Brick(position: Vector2(0, i * brickHeight)));
+      }
+      return;
+    }
+
+    // Valid start indices so the whole gap stays inside (not touching top/bottom)
+    // Allowed rows: 1 .. numBricks-2
+    // Start indices: 1 .. (numBricks - gapSizeInBricks - 1)
+    final lastValidStart = numBricks - gapSizeInBricks - 1;
+    final availableStarts = List<int>.generate(
+      (lastValidStart >= 1) ? (lastValidStart - 1 + 1) : 0,
+          (i) => i + 1,
     );
 
-    final numGaps = min(Random().nextInt(3) + 1, availableIndices.length ~/ gapSizeInBricks);
+    final maxNonOverlapping = (availableStarts.length / gapSizeInBricks).floor();
+    final numGaps = maxNonOverlapping == 0 ? 0 : min(rng.nextInt(3) + 1, maxNonOverlapping);
 
     final gapStartIndices = <int>[];
 
-    while (gapStartIndices.length < numGaps && availableIndices.length >= gapSizeInBricks) {
-      final candidateIndex = availableIndices[Random().nextInt(availableIndices.length)];
+    while (gapStartIndices.length < numGaps && availableStarts.isNotEmpty) {
+      final candidate = availableStarts[rng.nextInt(availableStarts.length)];
 
-      // Ensure no overlapping gaps
       final overlaps = gapStartIndices.any((start) =>
-      (candidateIndex < start + gapSizeInBricks) &&
-          (start < candidateIndex + gapSizeInBricks));
+      (candidate < start + gapSizeInBricks) && (start < candidate + gapSizeInBricks));
 
       if (!overlaps) {
-        gapStartIndices.add(candidateIndex);
-
-        // Remove affected indices from available
+        gapStartIndices.add(candidate);
         for (int i = 0; i < gapSizeInBricks; i++) {
-          availableIndices.remove(candidateIndex + i);
+          availableStarts.remove(candidate + i);
         }
       } else {
-        availableIndices.remove(candidateIndex);
+        availableStarts.remove(candidate);
       }
     }
 
-    // Build the wall
+    // Build bricks (skip gap rows)
     for (int i = 0; i < numBricks; i++) {
       final isGap = gapStartIndices.any((start) => i >= start && i < start + gapSizeInBricks);
       if (isGap) continue;
 
-      final brick = Brick(
-        position: Vector2(0, i * brickHeight),
-      );
-
-      add(brick);
+      add(Brick(position: Vector2(0, i * brickHeight)));
     }
   }
+
 
   void slideOut() {
     _state = WallState.slidingOut;

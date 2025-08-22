@@ -4,9 +4,11 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/monster_dash/components/brick.dart';
 import 'package:flamegame/util/utils.dart';
 
-import 'monster_dash.dart';
+import '../monster_dash.dart';
+import 'carrot.dart';
 
 class Bat extends SpriteAnimationComponent
     with HasGameReference<MonsterDash>, CollisionCallbacks {
@@ -118,6 +120,12 @@ class Bat extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    game.onPlayerCollision(other);
+
+    if (other is Carrot) {
+      other.collect();
+    } else {
+      game.onPlayerCollision(other);
+    }
   }
+
 }
