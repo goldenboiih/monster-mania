@@ -7,11 +7,11 @@ class Brick extends SpriteComponent {
 
   // asset path -> weight (higher = more common)
   static const Map<String, int> _weights = {
-    'blocks/stone.png'       : 50,
-    'blocks/coal.png'        : 8,
-    'blocks/iron.png'        : 6,
-    'blocks/gold.png'        : 3,
-    'blocks/diamond.png'     : 1,
+    'dungeon_dash/blocks/stone.png'       : 50,
+    'dungeon_dash/blocks/coal.png'        : 8,
+    'dungeon_dash/blocks/iron.png'        : 6,
+    'dungeon_dash/blocks/gold.png'        : 3,
+    'dungeon_dash/blocks/diamond.png'     : 1,
   };
 
   Brick({required super.position})

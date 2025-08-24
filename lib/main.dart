@@ -67,7 +67,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => _openGame(context, Game.endlessRunner, Orientation.landscape),
-              child: const Text('Start Endless Runner'),
+              child: const Text('Endless Runner'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -77,7 +77,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _openGame(context, Game.dash, Orientation.portrait),
-              child: const Text('Monster Dash'),
+              child: const Text('Dungeon Dash'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -175,17 +175,17 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           overlayBuilderMap: {
             'GameOver':
                 (context, game) => GameOverOverlay(game: game as MonsterDash),
-            'GetReady': (context, game) {
+            'TitleCard': (context, game) {
               final g = game as MonsterDash;
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   g.initializeGame();
-                  g.overlays.remove('GetReady');
+                  g.overlays.remove('TitleCard');
                 },
                 child: Center(
                   child: Image.asset(
-                    'assets/images/overlays/monster_dash.png',
+                    'assets/images/dungeon_dash/title_card.png',
                     filterQuality: FilterQuality.none,
                     fit: BoxFit.contain,
                     width: 480,
@@ -194,9 +194,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               );
             },
           },
-          initialActiveOverlays: const ['GetReady'],
+          initialActiveOverlays: const ['TitleCard'],
         );
     }
   }
-
 }

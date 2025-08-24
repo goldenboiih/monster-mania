@@ -31,7 +31,7 @@ class Bat extends SpriteAnimationComponent
     position = Vector2(game.size.x / 4, game.size.y / 4);
     await super.onLoad();
     animation = await game.loadSpriteAnimation(
-      'bat/boom_bat.png',
+      'dungeon_dash/boom_bat.png',
       SpriteAnimationData.sequenced(
         amount: 3,
         stepTime: .1,
