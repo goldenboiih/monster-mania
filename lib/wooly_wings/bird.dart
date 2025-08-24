@@ -5,10 +5,10 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 
-import 'flappy_game.dart';
+import 'wooly_wings.dart';
 
 class Bird extends SpriteAnimationComponent
-    with HasGameReference<FlappyGame>, CollisionCallbacks {
+    with HasGameReference<WoolyWings>, CollisionCallbacks {
   double jumpSpeed = -200;
   double velocityY = 0;
 

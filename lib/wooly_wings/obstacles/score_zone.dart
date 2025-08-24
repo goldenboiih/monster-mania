@@ -1,11 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flamegame/flappy_game/flappy_game.dart';
-import 'package:flamegame/flappy_game/bird.dart';
+import 'package:flamegame/wooly_wings/wooly_wings.dart';
+import 'package:flamegame/wooly_wings/bird.dart';
 import 'package:flamegame/base_game.dart';
 
 class ScoreZone extends PositionComponent
-    with HasGameReference<FlappyGame>, CollisionCallbacks {
+    with HasGameReference<WoolyWings>, CollisionCallbacks {
 
   ScoreZone({required Vector2 size}) {
     this.size = size;

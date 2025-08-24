@@ -12,7 +12,7 @@ import 'bird.dart';
 import 'obstacles/pipe.dart';
 import 'obstacles/pipe_pair.dart';
 
-class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
+class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
   @override
   final VoidCallback? onExitToMenu;
 
@@ -43,7 +43,7 @@ class FlappyGame extends BaseGame with TapDetector, HasCollisionDetection {
   final double _minGap = 110;
   final double _maxGap = 150;
 
-  FlappyGame({this.onExitToMenu});
+  WoolyWings({this.onExitToMenu});
 
   @override
   Future<void> onLoad() async {

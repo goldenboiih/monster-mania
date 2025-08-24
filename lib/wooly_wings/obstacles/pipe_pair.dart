@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flame/components.dart';
-import 'package:flamegame/flappy_game/flappy_game.dart';
-import 'package:flamegame/flappy_game/obstacles/pipe.dart';
-import 'package:flamegame/flappy_game/obstacles/score_zone.dart';
+import 'package:flamegame/wooly_wings/wooly_wings.dart';
+import 'package:flamegame/wooly_wings/obstacles/pipe.dart';
+import 'package:flamegame/wooly_wings/obstacles/score_zone.dart';
 
-class PipePair extends PositionComponent with HasGameReference<FlappyGame> {
+class PipePair extends PositionComponent with HasGameReference<WoolyWings> {
   PipePair({
     required super.position,      // center of the gap at spawn
     required this.gap,
