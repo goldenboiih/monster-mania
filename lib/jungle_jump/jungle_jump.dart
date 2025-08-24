@@ -6,9 +6,9 @@ import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
-import 'package:flamegame/endless_runner/ui/crouch_button.dart';
-import 'package:flamegame/endless_runner/ui/jump_button.dart';
-import 'package:flamegame/endless_runner/world/floor.dart';
+import 'package:flamegame/jungle_jump/ui/crouch_button.dart';
+import 'package:flamegame/jungle_jump/ui/jump_button.dart';
+import 'package:flamegame/jungle_jump/world/floor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -19,15 +19,15 @@ import 'obstacles/obstacle_spiky.dart';
 import 'obstacles/obstacle_tag.dart';
 import 'runner.dart';
 
-class EndlessRunnerGame extends BaseGame
+class JungleJump extends BaseGame
     with TapDetector, HasCollisionDetection, KeyboardEvents {
   @override
   final VoidCallback? onExitToMenu;
 
   @override
-  String get gameId => 'runner';
+  String get gameId => 'jungle_jump';
 
-  EndlessRunnerGame({this.onExitToMenu});
+  JungleJump({this.onExitToMenu});
 
   final double floorHeight = 64;
   late Runner runner;
@@ -89,7 +89,7 @@ class EndlessRunnerGame extends BaseGame
 
   @override
   Future<void> initializeGame() async {
-    previousHighScore = await HighscoreManager.getHighscore('runner');
+    previousHighScore = await HighscoreManager.getHighscore(gameId);
     gameState = GameState.playing;
 
     distanceMeters = 0.0;

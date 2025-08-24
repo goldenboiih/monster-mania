@@ -1,14 +1,14 @@
 import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flamegame/jungle_jump/jungle_jump.dart';
 import 'grumbluff_drop.dart';
 import 'obstacle_tag.dart';
 
 enum GrumbluffState { floatingIn, dropping, escapingRight, descending, chargingLeft }
 
 class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
-    with HasGameReference<EndlessRunnerGame>, ObstacleTag{
+    with HasGameReference<JungleJump>, ObstacleTag{
   static const double _dropTriggerFrac = 0.60;
   static const double _escapeTriggerFrac = 0.80;
 

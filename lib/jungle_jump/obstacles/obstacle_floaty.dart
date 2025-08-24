@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flamegame/endless_runner/obstacles/obstacle_tag.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flamegame/jungle_jump/obstacles/obstacle_tag.dart';
+import 'package:flamegame/jungle_jump/jungle_jump.dart';
 
-class ObstacleFloaty extends SpriteComponent with HasGameReference<EndlessRunnerGame>, ObstacleTag {
+class ObstacleFloaty extends SpriteComponent with HasGameReference<JungleJump>, ObstacleTag {
   double floatTime = 0.0;
   double floatAmplitude = 20.0; // reduced so it stays in one zone
   final double floatSpeed = 0.25;

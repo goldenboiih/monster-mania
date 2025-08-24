@@ -1,10 +1,10 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flamegame/endless_runner/obstacles/obstacle_tag.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flamegame/jungle_jump/obstacles/obstacle_tag.dart';
+import 'package:flamegame/jungle_jump/jungle_jump.dart';
 
 class GrumbluffDrop extends SpriteComponent
-    with HasGameReference<EndlessRunnerGame>, ObstacleTag {
+    with HasGameReference<JungleJump>, ObstacleTag {
   bool hasLanded = false;
   late double groundY;
 

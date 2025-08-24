@@ -2,15 +2,15 @@
 import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart' show Colors, Color, TextStyle, Paint;
-import '../endless_runner/runner.dart';
-import '../endless_runner/obstacles/obstacle_fly_guy.dart';
-import '../endless_runner/obstacles/obstacle_grumbluff.dart';
-import '../endless_runner/obstacles/obstacle_spiky.dart';
-import '../endless_runner/obstacles/obstacle_tag.dart';
-import '../endless_runner/runner_game.dart';
+import '../jungle_jump/runner.dart';
+import '../jungle_jump/obstacles/obstacle_fly_guy.dart';
+import '../jungle_jump/obstacles/obstacle_grumbluff.dart';
+import '../jungle_jump/obstacles/obstacle_spiky.dart';
+import '../jungle_jump/obstacles/obstacle_tag.dart';
+import '../jungle_jump/jungle_jump.dart';
 
 class DiagnosticsOverlay extends PositionComponent
-    with HasGameReference<EndlessRunnerGame> {
+    with HasGameReference<JungleJump> {
   DiagnosticsOverlay();
 
   final _bg = RectangleComponent(

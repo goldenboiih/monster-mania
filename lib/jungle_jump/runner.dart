@@ -2,10 +2,10 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flamegame/jungle_jump/jungle_jump.dart';
 
 class Runner extends SpriteAnimationComponent
-    with HasGameReference<EndlessRunnerGame>, CollisionCallbacks {
+    with HasGameReference<JungleJump>, CollisionCallbacks {
   // Movement and physics
   double verticalSpeed = 0;
   final double defaultGravity = 4000;

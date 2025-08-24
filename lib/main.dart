@@ -3,7 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'endless_runner/runner_game.dart';
+import 'jungle_jump/jungle_jump.dart';
 import 'wooly_wings/wooly_wings.dart';
 import 'monster_maker/avatar_maker_screen.dart';
 import 'overlays/game_over_overlay.dart';
@@ -30,7 +30,7 @@ class MonsterMania extends StatelessWidget {
   }
 }
 
-enum Game { endlessRunner, woolyWings, dungeonDash }
+enum Game { jungleJump, woolyWings, dungeonDash }
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -65,8 +65,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             const SizedBox(height: 40),
             ElevatedButton(
-              onPressed: () => _openGame(context, Game.endlessRunner, Orientation.landscape),
-              child: const Text('Endless Runner'),
+              onPressed: () => _openGame(context, Game.jungleJump, Orientation.landscape),
+              child: const Text('Jungle Jump'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -126,11 +126,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 // build the GameWidget only after orientation settled
   static Widget _buildGameWidget(Game gameType, BuildContext context) {
     switch (gameType) {
-      case Game.endlessRunner:
+      case Game.jungleJump:
         return GameWidget(
-          game: EndlessRunnerGame(onExitToMenu: () => Navigator.of(context).pop()),
+          game: JungleJump(onExitToMenu: () => Navigator.of(context).pop()),
           overlayBuilderMap: {
-            'GameOver': (ctx, g) => GameOverOverlay(game: g as EndlessRunnerGame),
+            'GameOver': (ctx, g) => GameOverOverlay(game: g as JungleJump),
           },
         );
       case Game.woolyWings:

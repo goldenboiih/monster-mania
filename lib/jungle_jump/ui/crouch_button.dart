@@ -1,9 +1,9 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flamegame/endless_runner/runner_game.dart';
+import 'package:flamegame/jungle_jump/jungle_jump.dart';
 
 class CrouchButton extends SpriteComponent
-    with HasGameReference<EndlessRunnerGame>, TapCallbacks {
+    with HasGameReference<JungleJump>, TapCallbacks {
   CrouchButton() : super(size: Vector2(128, 128), priority: 10);
 
   @override
