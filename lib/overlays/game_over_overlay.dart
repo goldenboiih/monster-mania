@@ -145,7 +145,7 @@ class GameOverOverlay extends StatelessWidget {
                       children: [
                         _BigIconButton(
                           tooltip: 'Menu',
-                          asset: 'assets/images/menu_button.png',
+                          asset: 'assets/images/ui/menu_button.png',
                           onPressed: () {
                             HapticFeedback.selectionClick();
                             game.overlays.remove('GameOver');
@@ -154,7 +154,7 @@ class GameOverOverlay extends StatelessWidget {
                         ),
                         _BigIconButton(
                           tooltip: 'Play again',
-                          asset: 'assets/images/play_button.png',
+                          asset: 'assets/images/ui/play_button.png',
                           onPressed: () {
                             HapticFeedback.lightImpact();
                             game.overlays.remove('GameOver');

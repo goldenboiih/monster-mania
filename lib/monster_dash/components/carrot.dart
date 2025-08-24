@@ -18,7 +18,7 @@ class Carrot extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('carrot.png');
+    sprite = await Sprite.load('dungeon_dash/carrot_outline.png');
     add(CircleHitbox.relative(1, parentSize: size));
   }
 
