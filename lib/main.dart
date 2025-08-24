@@ -30,7 +30,7 @@ class MonsterMania extends StatelessWidget {
   }
 }
 
-enum Game { endlessRunner, flappy, dash }
+enum Game { endlessRunner, woolyWings, dungeonDash }
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -70,12 +70,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _openGame(context, Game.flappy, Orientation.landscape),
-              child: const Text('Flappy Game'),
+              onPressed: () => _openGame(context, Game.woolyWings, Orientation.landscape),
+              child: const Text('Wooly Wings'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => _openGame(context, Game.dash, Orientation.portrait),
+              onPressed: () => _openGame(context, Game.dungeonDash, Orientation.portrait),
               child: const Text('Dungeon Dash'),
             ),
             const SizedBox(height: 20),
@@ -133,7 +133,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             'GameOver': (ctx, g) => GameOverOverlay(game: g as EndlessRunnerGame),
           },
         );
-      case Game.flappy:
+      case Game.woolyWings:
         return GameWidget(
           game: WoolyWings(
             onExitToMenu: () {
@@ -164,7 +164,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           },
           initialActiveOverlays: const ['GetReady'],
         );
-      case Game.dash:
+      case Game.dungeonDash:
         return GameWidget(
           game: DungeonDash(
             onExitToMenu: () {

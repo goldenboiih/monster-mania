@@ -17,7 +17,7 @@ class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
   final VoidCallback? onExitToMenu;
 
   @override
-  String get gameId => 'flappy';
+  String get gameId => 'wooly_wings';
 
   bool hasShownIntro = false;
 
@@ -63,7 +63,7 @@ class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   Future<void> initializeGame() async {
-    previousHighScore = await HighscoreManager.getHighscore('flappy');
+    previousHighScore = await HighscoreManager.getHighscore(gameId);
     if (!hasShownIntro) {
       gameState = GameState.intro;
       speed = 0;

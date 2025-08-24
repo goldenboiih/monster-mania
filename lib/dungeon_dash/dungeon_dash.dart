@@ -19,7 +19,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
   final VoidCallback? onExitToMenu;
   @override
 
-  String get gameId => 'dash';
+  String get gameId => 'dungeon_dash';
 
   DungeonDash({this.onExitToMenu});
 
@@ -78,7 +78,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   Future<void> initializeGame() async {
-    previousHighScore = await HighscoreManager.getHighscore('dash');
+    previousHighScore = await HighscoreManager.getHighscore(gameId);
     gameState = GameState.playing;
     score = 0;
     speed = initialSpeed;
