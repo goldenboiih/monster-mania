@@ -1,17 +1,13 @@
 import 'dart:ui';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/monster_dash/components/brick.dart';
-import 'package:flamegame/util/utils.dart';
-
-import '../monster_dash.dart';
+import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 import 'carrot.dart';
 
 class Bat extends SpriteAnimationComponent
-    with HasGameReference<MonsterDash>, CollisionCallbacks {
+    with HasGameReference<DungeonDash>, CollisionCallbacks {
   double flapSpeed = -256;
   double velocityY = 0;
   late double velocityX;

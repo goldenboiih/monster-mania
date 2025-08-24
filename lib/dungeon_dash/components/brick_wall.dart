@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:flame/components.dart';
-import 'package:flamegame/monster_dash/monster_dash.dart';
+import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 import 'brick.dart';
 
 enum WallState { idle, slidingOut, hidden }
 
-class BrickWall extends PositionComponent with HasGameReference<MonsterDash> {
+class BrickWall extends PositionComponent with HasGameReference<DungeonDash> {
   final bool left;
   static const double brickHeight = 32;
   static const double gapHeight = 128;

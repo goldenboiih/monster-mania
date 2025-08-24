@@ -6,14 +6,14 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flamegame/monster_dash/components/bat.dart';
-import 'package:flamegame/monster_dash/components/brick_wall.dart';
+import 'package:flamegame/dungeon_dash/components/bat.dart';
+import 'package:flamegame/dungeon_dash/components/brick_wall.dart';
 import 'dart:math';
 
 import 'components/carrot.dart';
 
 
-class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
+class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   final VoidCallback? onExitToMenu;
@@ -21,7 +21,7 @@ class MonsterDash extends BaseGame with TapDetector, HasCollisionDetection {
 
   String get gameId => 'dash';
 
-  MonsterDash({this.onExitToMenu});
+  DungeonDash({this.onExitToMenu});
 
   bool isPressing = false;
 

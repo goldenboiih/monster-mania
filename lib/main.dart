@@ -1,6 +1,6 @@
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flamegame/monster_dash/monster_dash.dart';
+import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -167,16 +167,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         );
       case Game.dash:
         return GameWidget(
-          game: MonsterDash(
+          game: DungeonDash(
             onExitToMenu: () {
               Navigator.of(context).pop();
             },
           ),
           overlayBuilderMap: {
             'GameOver':
-                (context, game) => GameOverOverlay(game: game as MonsterDash),
+                (context, game) => GameOverOverlay(game: game as DungeonDash),
             'TitleCard': (context, game) {
-              final g = game as MonsterDash;
+              final g = game as DungeonDash;
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {

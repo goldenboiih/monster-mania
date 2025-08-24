@@ -2,10 +2,10 @@ import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
-import 'package:flamegame/monster_dash/monster_dash.dart';
+import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 
 class Carrot extends SpriteComponent
-    with HasGameReference<MonsterDash>, CollisionCallbacks {
+    with HasGameReference<DungeonDash>, CollisionCallbacks {
   Carrot({required Vector2 position})
       : super(
     position: position,
