@@ -27,7 +27,7 @@ class Runner extends SpriteAnimationComponent
   Future<void> onLoad() async {
     final images = await Future.wait([
       for (int i = 0; i <= 6; i++)
-        game.images.load('monster_blue/sprite_$i.png'),
+        game.images.load('jungle_jump/monster_blue/sprite_$i.png'),
     ]);
 
     animation = SpriteAnimation.spriteList(

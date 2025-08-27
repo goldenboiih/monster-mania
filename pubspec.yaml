@@ -68,12 +68,12 @@ flutter:
   assets:
     - assets/images/
     - assets/audio/
-    - assets/images/monster_blue/
     - assets/images/floor.png
-    - assets/images/spiky/
-    - assets/images/floaty/
-    - assets/images/fly_guy/
-    - assets/images/grumbluff/
+    - assets/images/jungle_jump/monster_blue/
+    - assets/images/jungle_jump/spiky/
+    - assets/images/jungle_jump/floaty/
+    - assets/images/jungle_jump/fly_guy/
+    - assets/images/jungle_jump/grumbluff/
     - assets/images/flappy/
     - assets/images/dungeon_dash/
     - assets/images/dungeon_dash/blocks/

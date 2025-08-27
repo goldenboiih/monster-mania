@@ -19,7 +19,7 @@ class GrumbluffDrop extends SpriteComponent
   Future<void> onLoad() async {
     groundY = game.size.y - game.floorHeight - (size.y / 2);
 
-    sprite = await Sprite.load('grumbluff/drop_8x8.png');
+    sprite = await Sprite.load('jungle_jump/grumbluff/drop_8x8.png');
     add(RectangleHitbox.relative(Vector2.all(1.0), parentSize: size));
   }
 

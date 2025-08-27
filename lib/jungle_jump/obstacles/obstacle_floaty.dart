@@ -19,7 +19,7 @@ class ObstacleFloaty extends SpriteComponent with HasGameReference<JungleJump>, 
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('floaty/floaty_monster_32x32.png');
+    sprite = await Sprite.load('jungle_jump/floaty/floaty_monster_32x32.png');
 
     // Decide if this floaty should be high or low
     final bool spawnHigh = Random().nextBool();

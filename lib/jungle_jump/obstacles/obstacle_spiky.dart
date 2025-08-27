@@ -19,7 +19,7 @@ class ObstacleSpiky extends SpriteAnimationComponent
       game.size.y - game.floorHeight - (size.y / 2),
     );
     animation = await game.loadSpriteAnimation(
-      'spiky/spiky.png',
+      'jungle_jump/spiky/spiky.png',
       SpriteAnimationData.sequenced(
         amount: 6,
         stepTime: .1,

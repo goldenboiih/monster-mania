@@ -28,9 +28,9 @@ class ObstacleFlyGuy extends SpriteAnimationComponent
     }
     position = Vector2(game.size.x + width, altitude);
     final images = await Future.wait([
-      game.images.load('fly_guy/fly_guy_down.png'),
-      game.images.load('fly_guy/fly_guy_mid.png'),
-      game.images.load('fly_guy/fly_guy_up.png'),
+      game.images.load('jungle_jump/fly_guy/fly_guy_down.png'),
+      game.images.load('jungle_jump/fly_guy/fly_guy_mid.png'),
+      game.images.load('jungle_jump/fly_guy/fly_guy_up.png'),
     ]);
     animation = SpriteAnimation.spriteList(
       images.map((img) => Sprite(img)).toList(),

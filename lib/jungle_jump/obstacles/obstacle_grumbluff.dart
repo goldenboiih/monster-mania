@@ -39,10 +39,10 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
     skipDescend = Random().nextDouble() < 0.4;
 
     // Load animations and static sprites
-    final spriteIdle = await Sprite.load('grumbluff/grumbluff_idle.png');
-    final sprite0 = await Sprite.load('grumbluff/grumbluff_throw_0.png');
-    final sprite1 = await Sprite.load('grumbluff/grumbluff_throw_1.png');
-    final sprite2 = await Sprite.load('grumbluff/grumbluff_throw_2.png');
+    final spriteIdle = await Sprite.load('jungle_jump/grumbluff/grumbluff_idle.png');
+    final sprite0 = await Sprite.load('jungle_jump/grumbluff/grumbluff_throw_0.png');
+    final sprite1 = await Sprite.load('jungle_jump/grumbluff/grumbluff_throw_1.png');
+    final sprite2 = await Sprite.load('jungle_jump/grumbluff/grumbluff_throw_2.png');
 
     final dropAnimation = SpriteAnimation.spriteList(
       [sprite0, sprite1, sprite2],

@@ -100,9 +100,6 @@ class JungleJump extends BaseGame
     difficultyClock = 0.0;
 
     _createObstacleTimer(spawnInterval);
-
-    // add(Background());
-
     runner = Runner();
     add(runner);
   }
