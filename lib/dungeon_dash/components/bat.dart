@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
+import 'package:flame/timer.dart' as ft;
 import 'carrot.dart';
 
 class Bat extends SpriteAnimationComponent
@@ -18,6 +19,10 @@ class Bat extends SpriteAnimationComponent
   Bat() : super(size: Vector2(28 * 2.2, 19 * 2.2));
   late bool _facingRight;
 
+  // --- New: crash timer + guard ---
+  late ft.Timer _crashTimer;
+  bool _gameOverTriggered = false;
+
   bool get isFacingRight => _facingRight;
 
   @override
@@ -25,6 +30,14 @@ class Bat extends SpriteAnimationComponent
     _facingRight = true;
     velocityX = game.speed;
     position = Vector2(game.size.x / 4, game.size.y / 4);
+
+    // Init crash timer (fire once, e.g. after 0.8s)
+    _crashTimer = ft.Timer(
+      0.6,
+      onTick: _triggerGameOver,
+      repeat: false
+    )..stop();
+
     await super.onLoad();
     animation = await game.loadSpriteAnimation(
       'dungeon_dash/boom_bat.png',
@@ -41,20 +54,22 @@ class Bat extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
 
+    // Update crash timer regardless of state (safe no-op if not started)
+    _crashTimer.update(dt);
+
     if (game.gameState != GameState.playing &&
-        game.gameState != GameState.crashing)
+        game.gameState != GameState.crashing) {
       return;
+    }
 
     // --- Vertical motion ---
     if (game.gameState == GameState.playing) {
       if (game.isPressing) {
-        // Smoothly steer vertical speed toward upward target
         velocityY = lerpDouble(velocityY, -climbSpeed, dt * 10)!;
       } else {
-        // Gravity only when not pressing
         velocityY += game.gravity * dt;
       }
-    } else {
+    } else if (game.gameState == GameState.crashing) {
       // Crashing: pure gravity
       velocityY += game.gravity * dt;
     }
@@ -78,11 +93,9 @@ class Bat extends SpriteAnimationComponent
       angle = lerpDouble(angle, target, dt * angleLerpSpeed)!;
     }
 
-    // Game over
-    if (y > game.size.y || y < -height) {
-      FlameAudio.play('fall_2.mp3');
-      removeFromParent();
-      game.onGameOver();
+    // Fallback: if it leaves screen before timer, still end the game once
+    if ((y > game.size.y || y < -height) && !_gameOverTriggered) {
+      _triggerGameOver();
     }
   }
 
@@ -93,9 +106,14 @@ class Bat extends SpriteAnimationComponent
   }
 
   void startCrash() {
+    // Freeze animation and horizontal motion immediately
     animationTicker?.paused = true;
     velocityY = 0;
     velocityX = 0;
+
+    // Start the crash timer (restarts if called again)
+    _crashTimer.stop();
+    _crashTimer.start();
   }
 
   void _flipIfNeeded(bool facingRight) {
@@ -114,6 +132,15 @@ class Bat extends SpriteAnimationComponent
     }
   }
 
+  void _triggerGameOver() {
+    if (_gameOverTriggered) return;
+    _gameOverTriggered = true;
+
+    FlameAudio.play('fall_2.mp3');
+    removeFromParent();        // remove the bat
+    game.onGameOver();         // show game over overlay
+  }
+
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
@@ -124,5 +151,4 @@ class Bat extends SpriteAnimationComponent
       game.onPlayerCollision(other);
     }
   }
-
 }
