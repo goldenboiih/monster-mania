@@ -53,26 +53,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
       repeat: true,
     )..stop();
 
-    final parallax = await loadParallaxComponent(
-      [
-        ParallaxImageData('dungeon_dash/bg.png'),
-        // ParallaxImageData('clouds/1.png'),
-        // ParallaxImageData('clouds/2.png'),
-        // ParallaxImageData('clouds/3.png'),
-        // ParallaxImageData('clouds/4.png'),
-        // ParallaxImageData('clouds/5.png'),
-      ],
-      baseVelocity: Vector2(20, 0), // scroll right->left visually
-      repeat: ImageRepeat.repeat,
-      velocityMultiplierDelta: Vector2(1.0, 0.0),
-      priority: -1,
-    );
-
-    add(parallax);
-
     final Sprite bg = await Sprite.load('dungeon_dash/bg.png');
-    // add(SpriteComponent(sprite: bg, size: Vector2(size.x, size.y)));
-    // add(SpriteComponent(sprite: bg, size: size));
     add(SpriteComponent(sprite: bg, size: size));
   }
 
