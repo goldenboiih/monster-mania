@@ -11,13 +11,11 @@ import 'dart:math';
 
 import 'components/carrot.dart';
 
-
 class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
-
   @override
   final VoidCallback? onExitToMenu;
-  @override
 
+  @override
   String get gameId => 'dungeon_dash';
 
   DungeonDash({this.onExitToMenu});
@@ -37,7 +35,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
   late BrickWall rightWall;
 
   late Timer _carrotTimer;
-  final _rng = Random();
+  final _random = Random();
 
   @override
   Future<void> onLoad() async {
@@ -46,11 +44,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
     scoreText.position = Vector2(size.x / 2 - scoreText.width / 2, 16);
 
     // Spawn a carrot every 1.2–2.0s
-    _carrotTimer = Timer(
-      1.2,
-      onTick: _spawnCarrot,
-      repeat: true,
-    )..stop();
+    _carrotTimer = Timer(1.2, onTick: _spawnCarrot, repeat: true)..stop();
 
     final Sprite bg = await Sprite.load('dungeon_dash/bg.png');
     add(SpriteComponent(sprite: bg, size: size));
@@ -108,12 +102,10 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
   }
 
   void onPlayerCollision(PositionComponent other) {
-    if (gameState == GameState.playing && other.parent is BrickWall) {
-      _stopCarrotSpawns();
-      FlameAudio.play('die.mp3');
-      bat.startCrash();
-      gameState = GameState.crashing;
-    }
+    _stopCarrotSpawns();
+    FlameAudio.play('die.mp3');
+    bat.startCrash();
+    gameState = GameState.crashing;
   }
 
   void onBatBounceLeftToRight() {
@@ -142,7 +134,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
     final carrotCount = children.whereType<Carrot>().length;
     if (carrotCount >= maxCarrots) {
       // Don’t spawn new ones, just reschedule timer
-      final next = 1.2 + _rng.nextDouble() * 0.8;
+      final next = 1.2 + _random.nextDouble() * 0.8;
       _carrotTimer
         ..stop()
         ..limit = next
@@ -153,20 +145,19 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
     // Safe margins
     const double topMargin = 48;
     const double bottomMargin = 48;
-    final double y = _rng.nextDouble() * (size.y - topMargin - bottomMargin) + topMargin;
+    final double y =
+        _random.nextDouble() * (size.y - topMargin - bottomMargin) + topMargin;
 
     // Spawn roughly in the corridor
-    final double x = size.x * 0.5 + _rng.nextDouble() * 160 - 30;
+    final double x = size.x * 0.5 + _random.nextDouble() * 160 - 30;
 
     add(Carrot(position: Vector2(x, y)));
 
     // Reschedule next spawn
-    final next = 1.2 + _rng.nextDouble() * 0.8;
+    final next = 1.2 + _random.nextDouble() * 0.8;
     _carrotTimer
       ..stop()
       ..limit = next
       ..start();
   }
-
-
 }

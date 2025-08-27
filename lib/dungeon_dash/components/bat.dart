@@ -1,8 +1,10 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
+import 'package:flamegame/dungeon_dash/components/brick_wall.dart';
 import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 import 'carrot.dart';
 
@@ -17,6 +19,7 @@ class Bat extends SpriteAnimationComponent
 
   Bat() : super(size: Vector2(28 * 2.2, 19 * 2.2));
   late bool _facingRight;
+  final Random _random = Random();
 
   // --- New: crash timer + guard ---
   late Timer _crashTimer;
@@ -31,10 +34,7 @@ class Bat extends SpriteAnimationComponent
     position = Vector2(game.size.x / 4, game.size.y / 4);
 
     // Init crash timer (fire once, e.g. after 0.8s)
-    _crashTimer = Timer(
-      0.6,
-      onTick: _triggerGameOver,
-    )..stop();
+    _crashTimer = Timer(0.6, onTick: _triggerGameOver)..stop();
 
     await super.onLoad();
     animation = await game.loadSpriteAnimation(
@@ -55,11 +55,6 @@ class Bat extends SpriteAnimationComponent
     // Update crash timer regardless of state (safe no-op if not started)
     _crashTimer.update(dt);
 
-    // if (game.gameState != GameState.playing &&
-    //     game.gameState != GameState.crashing) {
-    //   return;
-    // }
-
     // --- Vertical motion ---
     if (game.gameState == GameState.playing) {
       if (game.isPressing) {
@@ -67,7 +62,8 @@ class Bat extends SpriteAnimationComponent
       } else {
         velocityY += game.gravity * dt;
       }
-    } else if (game.gameState == GameState.crashing || game.gameState == GameState.gameOver) {
+    } else if (game.gameState == GameState.crashing ||
+        game.gameState == GameState.gameOver) {
       // Crashing: pure gravity
       velocityY += game.gravity * dt;
     }
@@ -93,6 +89,7 @@ class Bat extends SpriteAnimationComponent
 
     // Fallback: if it leaves screen before timer, still end the game once
     if ((y > game.size.y || y < -height) && !_gameOverTriggered) {
+      removeFromParent();
       _triggerGameOver();
     }
   }
@@ -135,17 +132,26 @@ class Bat extends SpriteAnimationComponent
     _gameOverTriggered = true;
 
     FlameAudio.play('fall_2.mp3');
-    game.onGameOver();         // show game over overlay
+    game.onGameOver(); // show game over overlay
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
 
-    if (other is Carrot) {
-      other.collect();
-    } else {
-      game.onPlayerCollision(other);
+    if (game.gameState == GameState.playing) {
+      if (other is Carrot) {
+        FlameAudio.play('eat_${_random.nextInt(4)}.mp3');
+        other.collect();
+      } else if (other.parent is BrickWall) {
+        game.onPlayerCollision(other);
+      }
     }
+  }
+
+  @override
+  void onRemove() {
+    _crashTimer.stop();
+    super.onRemove();
   }
 }

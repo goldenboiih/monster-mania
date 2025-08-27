@@ -32,7 +32,7 @@ class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
   late double distanceSinceLastPipe;
 
   // Fairness & difficulty knobs
-  final _rng = Random();
+  final _random = Random();
   double _lastCenterY = 0;
   int _sinceLastMover = 999; // big so early ones can move
 
@@ -105,7 +105,7 @@ class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
     final minCenter = targetGap / 2 + _edgeMargin;
     final maxCenter = size.y - targetGap / 2 - _edgeMargin;
     final proposedCenter =
-        _lastCenterY + (_rng.nextDouble() * 2 - 1) * _maxCenterDelta;
+        _lastCenterY + (_random.nextDouble() * 2 - 1) * _maxCenterDelta;
     final centerY = proposedCenter.clamp(minCenter, maxCenter);
     _lastCenterY = centerY;
 
@@ -114,15 +114,15 @@ class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
     final baseMoveChance = (0.20 + score * 0.01).clamp(0.20, 0.55);
     final canMove =
         _sinceLastMover >= 2; // require at least 2 static between movers
-    final willMove = canMove && (_rng.nextDouble() < baseMoveChance);
+    final willMove = canMove && (_random.nextDouble() < baseMoveChance);
 
     // 4) If moving, pick sane amplitude & speed, clamped so we don’t hit edges
     double oscillationAmplitude = 0;
     double oscillationSpeed = 0;
     if (willMove) {
-      oscillationSpeed = 0.25 + _rng.nextDouble() * 0.35; // 0.25–0.60 Hz
+      oscillationSpeed = 0.25 + _random.nextDouble() * 0.35; // 0.25–0.60 Hz
       // request 30–70px but clamp so center ± amp stays within safe band
-      final requestedAmp = 30 + _rng.nextDouble() * 40;
+      final requestedAmp = 30 + _random.nextDouble() * 40;
       final allowedTop = centerY - (targetGap / 2 + _edgeMargin);
       final allowedBottom = (size.y - targetGap / 2 - _edgeMargin) - centerY;
       oscillationAmplitude = max(

@@ -1,6 +1,5 @@
-import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flame/components.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
 
@@ -33,10 +32,7 @@ class Carrot extends SpriteComponent
   }
 
   void collect() {
-    if (game.gameState == GameState.playing) {
-      FlameAudio.play('eat.mp3');
-      game.increaseScore();
-      removeFromParent();
-    }
+    game.increaseScore();
+    removeFromParent();
   }
 }

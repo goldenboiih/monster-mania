@@ -3,7 +3,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 class Brick extends SpriteComponent {
-  static final _rng = Random();
+  static final _random = Random();
 
   // asset path -> weight (higher = more common)
   static const Map<String, int> _weights = {
@@ -31,7 +31,7 @@ class Brick extends SpriteComponent {
   // ---- helpers ----
   static String _weightedChoice(Map<String, int> weights) {
     final total = weights.values.fold<int>(0, (a, b) => a + b);
-    int pick = _rng.nextInt(total); // 0..total-1
+    int pick = _random.nextInt(total); // 0..total-1
     for (final entry in weights.entries) {
       if (pick < entry.value) return entry.key;
       pick -= entry.value;

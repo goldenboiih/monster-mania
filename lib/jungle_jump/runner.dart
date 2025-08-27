@@ -49,7 +49,7 @@ class Runner extends SpriteAnimationComponent
       if (isCrouching) {
         stopCrouch(); // Stand up before jumping
       }
-      FlameAudio.play('sound1.mp3');
+      FlameAudio.play('jump_1.mp3');
       verticalSpeed = jumpForce;
     }
   }
