@@ -83,6 +83,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
   void restart() {
     children.whereType<BrickWall>().forEach((c) => c.removeFromParent());
     children.whereType<Carrot>().forEach((c) => c.removeFromParent());
+    children.whereType<Bat>().forEach((c) => c.removeFromParent());
     initializeGame();
   }
 

@@ -4,7 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/dungeon_dash/dungeon_dash.dart';
-import 'package:flame/timer.dart' as ft;
 import 'carrot.dart';
 
 class Bat extends SpriteAnimationComponent
@@ -20,7 +19,7 @@ class Bat extends SpriteAnimationComponent
   late bool _facingRight;
 
   // --- New: crash timer + guard ---
-  late ft.Timer _crashTimer;
+  late Timer _crashTimer;
   bool _gameOverTriggered = false;
 
   bool get isFacingRight => _facingRight;
@@ -32,10 +31,9 @@ class Bat extends SpriteAnimationComponent
     position = Vector2(game.size.x / 4, game.size.y / 4);
 
     // Init crash timer (fire once, e.g. after 0.8s)
-    _crashTimer = ft.Timer(
+    _crashTimer = Timer(
       0.6,
       onTick: _triggerGameOver,
-      repeat: false
     )..stop();
 
     await super.onLoad();
@@ -57,10 +55,10 @@ class Bat extends SpriteAnimationComponent
     // Update crash timer regardless of state (safe no-op if not started)
     _crashTimer.update(dt);
 
-    if (game.gameState != GameState.playing &&
-        game.gameState != GameState.crashing) {
-      return;
-    }
+    // if (game.gameState != GameState.playing &&
+    //     game.gameState != GameState.crashing) {
+    //   return;
+    // }
 
     // --- Vertical motion ---
     if (game.gameState == GameState.playing) {
@@ -69,7 +67,7 @@ class Bat extends SpriteAnimationComponent
       } else {
         velocityY += game.gravity * dt;
       }
-    } else if (game.gameState == GameState.crashing) {
+    } else if (game.gameState == GameState.crashing || game.gameState == GameState.gameOver) {
       // Crashing: pure gravity
       velocityY += game.gravity * dt;
     }
@@ -137,7 +135,6 @@ class Bat extends SpriteAnimationComponent
     _gameOverTriggered = true;
 
     FlameAudio.play('fall_2.mp3');
-    removeFromParent();        // remove the bat
     game.onGameOver();         // show game over overlay
   }
 
