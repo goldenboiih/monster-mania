@@ -172,12 +172,7 @@ class JungleJump extends BaseGame
   }
 
   void onPlayerCollision(PositionComponent other) {
-    if (gameState == GameState.crashing) return;
-    if (other is ObstacleTag) {
-      gameState = GameState.crashing;
-      runner.die();
-      FlameAudio.play('die.mp3');
-    }
+    gameState = GameState.crashing;
   }
 
   @override
