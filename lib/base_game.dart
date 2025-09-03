@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/game.dart';
 import 'package:flame_audio/flame_audio.dart';
+import 'package:flamegame/overlays/medal.dart';
 import 'package:flamegame/ui/music_toggle.dart';
 import 'package:flamegame/ui/score.dart';
 
@@ -19,6 +20,8 @@ abstract class BaseGame extends FlameGame {
   int score = 0;
   late ScoreText scoreText;
   late GameState gameState;
+
+  MedalThreshold get medalThreshold;
 
   void initializeGame();
   void restart();

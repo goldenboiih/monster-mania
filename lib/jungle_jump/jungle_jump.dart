@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/parallax.dart';
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
 import 'package:flamegame/jungle_jump/ui/crouch_button.dart';
 import 'package:flamegame/jungle_jump/ui/jump_button.dart';
 import 'package:flamegame/jungle_jump/world/floor.dart';
+import 'package:flamegame/overlays/medal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -33,6 +33,13 @@ class JungleJump extends BaseGame
   late Runner runner;
 
   late GameState gameState;
+
+  @override
+  MedalThreshold get medalThreshold => const MedalThreshold(
+    bronze: 100,
+    silver: 200,
+    gold: 300,
+  );
 
   // Difficulty ramp
   late double spawnInterval; // seconds between spawns (starts here)
@@ -62,12 +69,11 @@ class JungleJump extends BaseGame
     final double parallaxHeight = floorTopY; // everything above the floor
 
     final parallax = await loadParallaxComponent(
-      [
-        ParallaxImageData('jungle_bg.png'),
-      ],
+      [ParallaxImageData('jungle_bg.png')],
       baseVelocity: Vector2(20, 0),
       velocityMultiplierDelta: Vector2(5, 0.0),
-      repeat: ImageRepeat.repeatX, // only scroll/tile horizontally
+      repeat: ImageRepeat.repeatX,
+      // only scroll/tile horizontally
       priority: -1,
       size: Vector2(size.x, parallaxHeight), // don't cover the floor area
     );

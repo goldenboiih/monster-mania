@@ -6,6 +6,7 @@ import 'package:flame/parallax.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/highscore_manager.dart';
+import 'package:flamegame/overlays/medal.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'bird.dart';
@@ -27,6 +28,13 @@ class WoolyWings extends BaseGame with TapDetector, HasCollisionDetection {
   final double initialSpeed = 256;
 
   late Bird bird;
+
+  @override
+  MedalThreshold get medalThreshold => const MedalThreshold(
+    bronze: 15,
+    silver: 30,
+    gold: 45,
+  );
 
   // Spawn pacing
   late double distanceSinceLastPipe;

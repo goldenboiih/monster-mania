@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flamegame/dungeon_dash/components/bat.dart';
 import 'package:flamegame/dungeon_dash/components/brick_wall.dart';
 import 'dart:math';
-
+import 'package:flamegame/overlays/medal.dart';
 import 'components/carrot.dart';
 
 class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
@@ -17,6 +17,10 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   String get gameId => 'dungeon_dash';
+
+  @override
+  MedalThreshold get medalThreshold =>
+      const MedalThreshold(bronze: 15, silver: 30, gold: 45);
 
   DungeonDash({this.onExitToMenu});
 

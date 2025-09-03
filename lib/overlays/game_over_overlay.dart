@@ -100,13 +100,6 @@ class GameOverOverlay extends StatelessWidget {
                                     ),
                                   ),
                                   alignment: Alignment.center,
-                                  child: const Text(
-                                    '—',
-                                    style: TextStyle(
-                                      fontFamily: 'PressStart2P',
-                                      fontSize: 10,
-                                    ),
-                                  ),
                                 ),
                             ],
                           ),
@@ -207,9 +200,6 @@ class GameOverOverlay extends StatelessWidget {
   }
 
   _Medal _pickMedal(int score) {
-    if (score >= 30) return _Medal('assets/images/medals/medal_gold.png');
-    if (score >= 20) return _Medal('assets/images/medals/medal_silver.png');
-    if (score >= 10) return _Medal('assets/images/medals/medal_bronze.png');
     return const _Medal(null);
   }
 }
@@ -241,6 +231,5 @@ class _BigIconButton extends StatelessWidget {
 
 class _Medal {
   final String? asset;
-
   const _Medal(this.asset);
 }
