@@ -4,8 +4,17 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/base_game.dart';
 import 'package:flamegame/jungle_jump/jungle_jump.dart';
 
+import 'obstacles/obstacle_tag.dart';
+
 class Runner extends SpriteAnimationComponent
     with HasGameReference<JungleJump>, CollisionCallbacks {
+  Runner() : super() {
+    size = Vector2(64, 64);
+    debugMode = true;
+    position.x = 150;
+  }
+
+
   // Movement and physics
   double verticalSpeed = 0;
   final double defaultGravity = 4000;
@@ -21,18 +30,15 @@ class Runner extends SpriteAnimationComponent
 
   bool isCrouching = false;
 
-  Runner() : super(size: Vector2(64, 64), position: Vector2(100, 100));
-
   @override
   Future<void> onLoad() async {
-    final images = await Future.wait([
-      for (int i = 0; i <= 6; i++)
-        game.images.load('jungle_jump/monster_blue/sprite_$i.png'),
-    ]);
-
-    animation = SpriteAnimation.spriteList(
-      images.map((img) => Sprite(img)).toList(),
-      stepTime: 0.05,
+    animation = await game.loadSpriteAnimation(
+      'jungle_jump/blinko.png',
+      SpriteAnimationData.sequenced(
+        amount: 6,
+        stepTime: .1,
+        textureSize: Vector2(48, 36),
+      ),
     );
 
     anchor = Anchor.center;
@@ -43,7 +49,6 @@ class Runner extends SpriteAnimationComponent
 
   bool get isOnGround => y >= groundY;
 
-
   void jump() {
     if (game.gameState == GameState.playing && isOnGround) {
       if (isCrouching) {
@@ -53,7 +58,6 @@ class Runner extends SpriteAnimationComponent
       verticalSpeed = jumpForce;
     }
   }
-
 
   void crouch() {
     if (game.gameState != GameState.playing) return;
@@ -69,7 +73,6 @@ class Runner extends SpriteAnimationComponent
     }
   }
 
-
   void stopCrouch() {
     gravity = defaultGravity;
 
@@ -81,6 +84,7 @@ class Runner extends SpriteAnimationComponent
   }
 
   void die() {
+    FlameAudio.play('hit.mp3');
     verticalSpeed = -300;
     animationTicker?.paused = true;
   }
@@ -111,7 +115,11 @@ class Runner extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    game.onPlayerCollision(other);
-
+    if (game.gameState == GameState.playing) {
+      if (other is ObstacleTag) {
+        game.onPlayerCollision(other);
+        die();
+      }
+    }
   }
 }
