@@ -5,6 +5,7 @@ import 'package:flamegame/base_game.dart';
 
 class GameOverOverlay extends StatelessWidget {
   final BaseGame game;
+
   const GameOverOverlay({super.key, required this.game});
 
   @override
@@ -27,12 +28,21 @@ class GameOverOverlay extends StatelessWidget {
               container: true,
               child: Container(
                 width: panelWidth,
-                padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 22),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 28,
+                  horizontal: 22,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFF3B3),
                   border: Border.all(color: Colors.brown, width: 3),
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26, offset: Offset(0, 6))],
+                  boxShadow: const [
+                    BoxShadow(
+                      blurRadius: 10,
+                      color: Colors.black26,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -44,7 +54,9 @@ class GameOverOverlay extends StatelessWidget {
                         fontFamily: 'PressStart2P',
                         fontSize: 20,
                         color: Color(0xFFDA6317),
-                        shadows: [Shadow(color: Colors.white, offset: Offset(2, 2))],
+                        shadows: [
+                          Shadow(color: Colors.white, offset: Offset(2, 2)),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 18),
@@ -67,7 +79,14 @@ class GameOverOverlay extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               if (medal.asset != null)
-                                Image.asset(medal.asset!, width: 56, height: 56)
+                                SizedBox(
+                                  width: 64,
+                                  height: 64,
+                                  child: Image.asset(
+                                    medal.asset!,
+                                    fit: BoxFit.contain,
+                                  ),
+                                )
                               else
                                 Container(
                                   width: 56,
@@ -75,11 +94,19 @@ class GameOverOverlay extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.white,
-                                    border: Border.all(color: Colors.orangeAccent, width: 2),
+                                    border: Border.all(
+                                      color: Colors.orangeAccent,
+                                      width: 2,
+                                    ),
                                   ),
                                   alignment: Alignment.center,
-                                  child: const Text('—',
-                                      style: TextStyle(fontFamily: 'PressStart2P', fontSize: 10)),
+                                  child: const Text(
+                                    '—',
+                                    style: TextStyle(
+                                      fontFamily: 'PressStart2P',
+                                      fontSize: 10,
+                                    ),
+                                  ),
                                 ),
                             ],
                           ),
@@ -101,8 +128,9 @@ class GameOverOverlay extends StatelessWidget {
                               const SizedBox(height: 2),
                               AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 250),
-                                transitionBuilder: (c, a) =>
-                                    ScaleTransition(scale: a, child: c),
+                                transitionBuilder:
+                                    (c, a) =>
+                                        ScaleTransition(scale: a, child: c),
                                 child: Text(
                                   '${game.score}',
                                   key: ValueKey<int>(game.score),
@@ -119,9 +147,14 @@ class GameOverOverlay extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: 'PressStart2P',
                                   fontSize: 14,
-                                  color: isNewHighScore ? Colors.redAccent : Colors.orangeAccent,
+                                  color:
+                                      isNewHighScore
+                                          ? Colors.redAccent
+                                          : Colors.orangeAccent,
                                 ),
-                                child: Text(isNewHighScore ? 'NEW BEST' : 'BEST'),
+                                child: Text(
+                                  isNewHighScore ? 'NEW BEST' : 'BEST',
+                                ),
                               ),
                               Text(
                                 '${game.highScore}',
@@ -174,9 +207,9 @@ class GameOverOverlay extends StatelessWidget {
   }
 
   _Medal _pickMedal(int score) {
-    if (score >= 30) return _Medal('assets/images/medal_gold.png');
-    if (score >= 20) return _Medal('assets/images/medal_silver.png');
-    if (score >= 10) return _Medal('assets/images/medal_bronze.png');
+    if (score >= 30) return _Medal('assets/images/medals/medal_gold.png');
+    if (score >= 20) return _Medal('assets/images/medals/medal_silver.png');
+    if (score >= 10) return _Medal('assets/images/medals/medal_bronze.png');
     return const _Medal(null);
   }
 }
@@ -185,7 +218,13 @@ class _BigIconButton extends StatelessWidget {
   final String asset;
   final VoidCallback onPressed;
   final String? tooltip;
-  const _BigIconButton({required this.asset, required this.onPressed, this.tooltip, super.key});
+
+  const _BigIconButton({
+    required this.asset,
+    required this.onPressed,
+    this.tooltip,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -202,5 +241,6 @@ class _BigIconButton extends StatelessWidget {
 
 class _Medal {
   final String? asset;
+
   const _Medal(this.asset);
 }
