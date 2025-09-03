@@ -14,7 +14,7 @@ class GameOverOverlay extends StatelessWidget {
     final bool isNewHighScore = game.highScore > game.previousHighScore;
     final double panelWidth = mq.size.width.clamp(280.0, 420.0);
 
-    final _Medal medal = _pickMedal(game.score);
+    final _Medal medal = _pickMedal(game.highScore);
 
     return Stack(
       children: [
@@ -200,6 +200,15 @@ class GameOverOverlay extends StatelessWidget {
   }
 
   _Medal _pickMedal(int score) {
+    final t = game.medalThreshold;
+
+    if (score >= t.gold) {
+      return const _Medal('assets/images/medals/medal_gold.png');
+    } else if (score >= t.silver) {
+      return const _Medal('assets/images/medals/medal_silver.png');
+    } else if (score >= t.bronze) {
+      return const _Medal('assets/images/medals/medal_bronze.png');
+    }
     return const _Medal(null);
   }
 }
@@ -231,5 +240,6 @@ class _BigIconButton extends StatelessWidget {
 
 class _Medal {
   final String? asset;
+
   const _Medal(this.asset);
 }
