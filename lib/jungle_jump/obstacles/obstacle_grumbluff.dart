@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flamegame/jungle_jump/jungle_jump.dart';
 import 'grumbluff_drop.dart';
 import 'obstacle_tag.dart';
@@ -127,6 +128,7 @@ class ObstacleGrumbluff extends SpriteAnimationGroupComponent<GrumbluffState>
     animationTicker?.reset();
     // After animation finishes, spawn the drop
     dropIdleTimer = Timer(animDuration, onTick: () {
+      FlameAudio.play('throw.mp3');
       game.add(GrumbluffDrop(position.clone() + Vector2(0, size.y / 2)));
       dropsRemaining--;
 
