@@ -69,6 +69,7 @@ flutter:
     - assets/images/
     - assets/audio/
     - assets/images/floor.png
+    - assets/images/jungle_jump/
     - assets/images/jungle_jump/monster_blue/
     - assets/images/jungle_jump/spiky/
     - assets/images/jungle_jump/floaty/
@@ -83,6 +84,7 @@ flutter:
     - assets/images/monster_maker/horns/
     - assets/images/monster_maker/mouths/
     - assets/images/pipe/
+    - assets/images/medals/
     - assets/audio/
   fonts:
     - family: BotsMatic
