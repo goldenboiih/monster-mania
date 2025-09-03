@@ -73,7 +73,7 @@ class GameOverOverlay extends StatelessWidget {
                                 'MEDAL',
                                 style: TextStyle(
                                   fontFamily: 'PressStart2P',
-                                  fontSize: 8,
+                                  fontSize: 14,
                                   color: Colors.orangeAccent,
                                 ),
                               ),
