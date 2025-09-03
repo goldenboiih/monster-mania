@@ -20,8 +20,8 @@ abstract class BaseGame extends FlameGame {
   late ScoreText scoreText;
   late GameState gameState;
 
-  void initializeGame() {}
-  void restart() {}
+  void initializeGame();
+  void restart();
 
   Future<void> onGameOver() async {
     if (score > previousHighScore) {
