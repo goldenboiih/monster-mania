@@ -20,7 +20,7 @@ class DungeonDash extends BaseGame with TapDetector, HasCollisionDetection {
 
   @override
   MedalThreshold get medalThreshold =>
-      const MedalThreshold(bronze: 15, silver: 30, gold: 45);
+      const MedalThreshold(bronze: 35, silver: 75, gold: 100);
 
   DungeonDash({this.onExitToMenu});
 
